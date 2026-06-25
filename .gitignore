@@ -1,0 +1,52 @@
+# Dataset (large binary files -- provide separately via Drive or direct copy)
+data/raw/
+data/segmented/
+data/*.xlsx
+data/*.csv
+
+# Model checkpoints (large binary files)
+checkpoints/*.pth
+checkpoints/*.pt
+
+# Training outputs
+results/*.csv
+results/*.json
+results/*.png
+
+# uv
+.venv/
+uv.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Colab credentials
+/content/
+
+# Keep directory placeholders
+!data/raw/data_before/.gitkeep
+!data/raw/data_after/.gitkeep
+!data/segmented/data_before/.gitkeep
+!data/segmented/data_after/.gitkeep
+!checkpoints/.gitkeep
+!results/.gitkeep

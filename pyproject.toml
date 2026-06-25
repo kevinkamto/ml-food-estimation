@@ -2,7 +2,7 @@
 name = "food-waste-estimation"
 version = "0.1.0"
 description = "Dual-stream CNN for automated food waste estimation from before/after meal image pairs"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "torch>=2.0.0",
     "torchvision>=0.15.0",
@@ -15,6 +15,7 @@ dependencies = [
     "loguru>=0.7.0",
     "opencv-python>=4.8.0",
     "tqdm>=4.65.0",
+    "segment-anything>=1.0",
 ]
 
 [dependency-groups]
@@ -27,13 +28,13 @@ dev = [
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "W", "F", "I"]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true

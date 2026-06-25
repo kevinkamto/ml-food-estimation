@@ -1,0 +1,2665 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.3 20210610//EN" "http://jats.nlm.nih.gov/publishing/1.3/JATS-journalpublishing1-3.dtd">
+<article article-type="research-article" dtd-version="1.3" xml:lang="en"
+  xmlns:mml="http://www.w3.org/1998/Math/MathML"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+  <processing-meta>
+    <custom-meta-group content-type="composition">
+      <custom-meta specific-use="newgen" xlink:href="https://www.newgen.co/">
+        <meta-name>Composition Vendor</meta-name>
+        <meta-value>Newgen KnowledgeWorks (P) Ltd.</meta-value>
+      </custom-meta>
+    </custom-meta-group>
+  </processing-meta>
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="nlm-ta">PLoS One</journal-id>
+      <journal-id journal-id-type="publisher-id">plos</journal-id>
+      <journal-id journal-id-type="pmc">plosone</journal-id>
+      <journal-title-group>
+        <journal-title>PLOS One</journal-title>
+      </journal-title-group>
+      <issn pub-type="epub">1932-6203</issn>
+      <publisher>
+        <publisher-name>Public Library of Science</publisher-name>
+        <publisher-loc>San Francisco, CA USA</publisher-loc>
+      </publisher>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="doi">10.1371/journal.pone.0320426</article-id>
+      <article-id pub-id-type="publisher-id">PONE-D-24-29578</article-id>
+      <article-categories>
+        <subj-group subj-group-type="heading">
+          <subject>Research Article</subject>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Biology and life sciences</subject>
+          <subj-group>
+            <subject>Nutrition</subject>
+            <subj-group>
+              <subject>Diet</subject>
+              <subj-group>
+                <subject>Food</subject>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Medicine and health sciences</subject>
+          <subj-group>
+            <subject>Nutrition</subject>
+            <subj-group>
+              <subject>Diet</subject>
+              <subj-group>
+                <subject>Food</subject>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Research and analysis methods</subject>
+          <subj-group>
+            <subject>Imaging techniques</subject>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Computer and information sciences</subject>
+          <subj-group>
+            <subject>Artificial intelligence</subject>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Biology and life sciences</subject>
+          <subj-group>
+            <subject>Organisms</subject>
+            <subj-group>
+              <subject>Eukaryota</subject>
+              <subj-group>
+                <subject>Plants</subject>
+                <subj-group>
+                  <subject>Grasses</subject>
+                  <subj-group>
+                    <subject>Rice</subject>
+                  </subj-group>
+                </subj-group>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Research and analysis methods</subject>
+          <subj-group>
+            <subject>Animal studies</subject>
+            <subj-group>
+              <subject>Experimental organism systems</subject>
+              <subj-group>
+                <subject>Plant and algal models</subject>
+                <subj-group>
+                  <subject>Rice</subject>
+                </subj-group>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Computer and information sciences</subject>
+          <subj-group>
+            <subject>Artificial intelligence</subject>
+            <subj-group>
+              <subject>Machine learning</subject>
+              <subj-group>
+                <subject>Deep learning</subject>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Biology and life sciences</subject>
+          <subj-group>
+            <subject>Nutrition</subject>
+            <subj-group>
+              <subject>Diet</subject>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Medicine and health sciences</subject>
+          <subj-group>
+            <subject>Nutrition</subject>
+            <subj-group>
+              <subject>Diet</subject>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Biology and life sciences</subject>
+          <subj-group>
+            <subject>Organisms</subject>
+            <subj-group>
+              <subject>Eukaryota</subject>
+              <subj-group>
+                <subject>Animals</subject>
+                <subj-group>
+                  <subject>Vertebrates</subject>
+                  <subj-group>
+                    <subject>Amniotes</subject>
+                    <subj-group>
+                      <subject>Birds</subject>
+                      <subj-group>
+                        <subject>Fowl</subject>
+                        <subj-group>
+                          <subject>Gamefowl</subject>
+                          <subj-group>
+                            <subject>Chickens</subject>
+                          </subj-group>
+                        </subj-group>
+                      </subj-group>
+                    </subj-group>
+                  </subj-group>
+                </subj-group>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Biology and life sciences</subject>
+          <subj-group>
+            <subject>Zoology</subject>
+            <subj-group>
+              <subject>Animals</subject>
+              <subj-group>
+                <subject>Vertebrates</subject>
+                <subj-group>
+                  <subject>Amniotes</subject>
+                  <subj-group>
+                    <subject>Birds</subject>
+                    <subj-group>
+                      <subject>Fowl</subject>
+                      <subj-group>
+                        <subject>Gamefowl</subject>
+                        <subj-group>
+                          <subject>Chickens</subject>
+                        </subj-group>
+                      </subj-group>
+                    </subj-group>
+                  </subj-group>
+                </subj-group>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Biology and life sciences</subject>
+          <subj-group>
+            <subject>Organisms</subject>
+            <subj-group>
+              <subject>Eukaryota</subject>
+              <subj-group>
+                <subject>Animals</subject>
+                <subj-group>
+                  <subject>Vertebrates</subject>
+                  <subj-group>
+                    <subject>Amniotes</subject>
+                    <subj-group>
+                      <subject>Birds</subject>
+                      <subj-group>
+                        <subject>Poultry</subject>
+                        <subj-group>
+                          <subject>Chickens</subject>
+                        </subj-group>
+                      </subj-group>
+                    </subj-group>
+                  </subj-group>
+                </subj-group>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Biology and life sciences</subject>
+          <subj-group>
+            <subject>Zoology</subject>
+            <subj-group>
+              <subject>Animals</subject>
+              <subj-group>
+                <subject>Vertebrates</subject>
+                <subj-group>
+                  <subject>Amniotes</subject>
+                  <subj-group>
+                    <subject>Birds</subject>
+                    <subj-group>
+                      <subject>Poultry</subject>
+                      <subj-group>
+                        <subject>Chickens</subject>
+                      </subj-group>
+                    </subj-group>
+                  </subj-group>
+                </subj-group>
+              </subj-group>
+            </subj-group>
+          </subj-group>
+        </subj-group>
+        <subj-group subj-group-type="Discipline-v3">
+          <subject>Computer and information sciences</subject>
+          <subj-group>
+            <subject>Data acquisition</subject>
+          </subj-group>
+        </subj-group>
+      </article-categories>
+      <title-group>
+        <article-title>LeFood-set: Baseline performance of predicting level of leftovers
+          food dataset in a hospital using MT learning</article-title>
+        <alt-title alt-title-type="running-head">LeFood-set: Baseline performance of
+          predicting level of leftovers food dataset in a hospital</alt-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author" corresp="yes" equal-contrib="yes" xlink:type="simple">
+          <contrib-id authenticated="true" contrib-id-type="orcid">
+            https://orcid.org/0000-0001-9580-5538</contrib-id>
+          <name name-style="western">
+            <surname>Sari</surname>
+            <given-names>Yuita Arum</given-names>
+          </name>
+          <role content-type="http://credit.niso.org/contributor-roles/conceptualization/">
+            Conceptualization</role>
+          <role content-type="http://credit.niso.org/contributor-roles/Data curation/">Data
+            curation</role>
+          <role content-type="http://credit.niso.org/contributor-roles/Formal analysis/">Formal
+            analysis</role>
+          <role content-type="http://credit.niso.org/contributor-roles/Investigation/">
+            Investigation</role>
+          <role content-type="http://credit.niso.org/contributor-roles/Methodology/">
+            Methodology</role>
+          <role content-type="http://credit.niso.org/contributor-roles/Software/">Software</role>
+          <role content-type="http://credit.niso.org/contributor-roles/Visualization/">
+            Visualization</role>
+          <role
+            content-type="http://credit.niso.org/contributor-roles/Writing – original draft/">Writing
+            – original draft</role>
+          <role
+            content-type="http://credit.niso.org/contributor-roles/Writing – review &amp; editing/">Writing
+            – review &amp; editing</role>
+          <xref ref-type="aff" rid="aff001">
+            <sup>1</sup>
+          </xref>
+          <xref ref-type="aff" rid="aff002">
+            <sup>2</sup>
+          </xref>
+          <xref ref-type="corresp" rid="cor001">*
+
+
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" equal-contrib="yes" xlink:type="simple">
+          <name name-style="western">
+            <surname>Nakazawa</surname>
+            <given-names>Atsushi</given-names>
+          </name>
+          <role content-type="http://credit.niso.org/contributor-roles/conceptualization/">
+            Conceptualization</role>
+          <role content-type="http://credit.niso.org/contributor-roles/formal-analysis/">Formal
+            analysis</role>
+          <role
+            content-type="http://credit.niso.org/contributor-roles/funding-acquisition/">Funding
+            acquisition</role>
+          <role content-type="http://credit.niso.org/contributor-roles/investigation/">
+            Investigation</role>
+          <role content-type="http://credit.niso.org/contributor-roles/methodology/">
+            Methodology</role>
+          <role
+            content-type="http://credit.niso.org/contributor-roles/project-administration/">Project
+            administration</role>
+          <role content-type="http://credit.niso.org/contributor-roles/supervision/">
+            Supervision</role>
+          <role
+            content-type="http://credit.niso.org/contributor-roles/writing-review-editing/">Writing
+            – review &amp; editing</role>
+          <xref ref-type="aff" rid="aff001">
+            <sup>1</sup>
+          </xref>
+        </contrib>
+        <contrib contrib-type="author" xlink:type="simple">
+          <name name-style="western">
+            <surname>Wani</surname>
+            <given-names>Yudi Arimba</given-names>
+          </name>
+          <role content-type="http://credit.niso.org/contributor-roles/conceptualization/">
+            Conceptualization</role>
+          <role content-type="http://credit.niso.org/contributor-roles/data curation/">Data
+            curation</role>
+          <role content-type="http://credit.niso.org/contributor-roles/methodology/">
+            Methodology</role>
+          <role content-type="http://credit.niso.org/contributor-roles/validation/">
+            Validation</role>
+          <xref ref-type="aff" rid="aff003">
+            <sup>3</sup>
+          </xref>
+        </contrib>
+      </contrib-group>
+      <aff id="aff001">
+        <label>1</label>
+        <addr-line>Graduate School of Interdisciplinary Science and Engineering in Health
+          Systems, Okayama University, Kita-Ku, Okayama, Japan</addr-line>
+      </aff>
+      <aff id="aff002">
+        <label>2</label>
+        <addr-line>Faculty of Computer Science, Brawijaya University, Malang, Indonesia</addr-line>
+      </aff>
+      <aff id="aff003">
+        <label>3</label>
+        <addr-line>Nutrition Department, Faculty of Health Sciences, Brawijaya University,
+          Malang, Indonesia</addr-line>
+      </aff>
+      <contrib-group>
+        <contrib contrib-type="editor" xlink:type="simple">
+          <name name-style="western">
+            <surname>Okpala</surname>
+            <given-names>Charles Odilichukwu R.</given-names>
+          </name>
+          <role>Editor</role>
+          <xref ref-type="aff" rid="edit1" />
+        </contrib>
+      </contrib-group>
+      <aff id="edit1">
+        <addr-line>University of Georgia, UNITED STATES OF AMERICA</addr-line>
+      </aff>
+      <author-notes>
+        <corresp id="cor001">* <email xlink:type="simple">yuita@ub.ac.id</email>; <email
+            xlink:type="simple">sari0y0mif@s.okayama-u.ac.jp</email>
+        </corresp>
+        <fn fn-type="conflict" id="coi001">
+          <p>The authors have declared that no competing interests exist.</p>
+        </fn>
+      </author-notes>
+      <pub-date pub-type="epub">
+        <day>19</day>
+        <month>5</month>
+        <year>2025</year>
+      </pub-date>
+      <pub-date pub-type="collection">
+        <year>2025</year>
+      </pub-date>
+      <volume>20</volume>
+      <issue>5</issue>
+      <elocation-id>e0320426</elocation-id>
+      <history>
+        <date date-type="received">
+          <day>22</day>
+          <month>7</month>
+          <year>2024</year>
+        </date>
+        <date date-type="accepted">
+          <day>18</day>
+          <month>2</month>
+          <year>2025</year>
+        </date>
+      </history>
+      <permissions>
+        <copyright-year>2025</copyright-year>
+        <copyright-holder>Sari et al</copyright-holder>
+        <license xlink:href="http://creativecommons.org/licenses/by/4.0/"
+          xlink:type="simple">
+          <license-p>This is an open access article distributed under the terms of the <ext-link
+              ext-link-type="uri"
+              xlink:href="http://creativecommons.org/licenses/by/4.0/"
+              xlink:type="simple">Creative Commons Attribution License</ext-link>, which permits
+            unrestricted use, distribution, and reproduction in any medium, provided the original
+            author and source are credited. </license-p>
+        </license>
+      </permissions>
+      <self-uri content-type="pdf" xlink:href="info:doi/10.1371/journal.pone.0320426" />
+      <abstract>
+        <p>Monitoring the remaining food in patients’ trays is a routine activity in
+          healthcare facilities as it provides valuable insights into the patients’
+          dietary intake. However, estimating food leftovers through visual observation is
+          time-consuming and biased. To tackle this issue, we have devised an efficient
+          deep learning-based approach that promises to revolutionize how we estimate food
+          leftovers. Our first step was creating the LeFoodSet dataset, a pioneering
+          large-scale open dataset explicitly designed for estimating food leftovers. This
+          dataset is unique in its ability to estimate leftover rates and types of food.
+          To the best of our knowledge, this is the first comprehensive dataset for this
+          type of analysis. The dataset comprises 524 image pairs representing 34
+          Indonesian food categories, each with images captured before and after
+          consumption. Our prediction models employed a combined visual feature extraction
+          and late fusion approach utilizing soft parameter sharing. Here, we used
+          multi-task (MT) models that simultaneously predict leftovers and food types in
+          training. In the experiments, we tested the single task (ST) model, the ST Model
+          with Ground Truth (ST-GT), the MT model, and the MT model with Inter-task
+          Connection (MT-IC). Our AI-based models, particularly the MT and MT-IC models,
+          have shown promising results, outperforming human observation in predicting
+          leftover food. These findings show the best with the ResNet101 model, where the
+          Mean Average Error (MAE) of leftover task and food classification accuracy task
+          is 0.0801 and 90.44% in the MT Model and 0.0817 and 92.56% in the MT-IC Model,
+          respectively. It is proved that the proposed solution has a bright future for
+          AI-based approaches in medical and nursing applications.</p>
+      </abstract>
+      <funding-group>
+        <award-group id="award001">
+          <funding-source>
+            <institution-wrap>
+              <institution-id institution-id-type="funder-id">
+                http://dx.doi.org/10.13039/501100001695</institution-id>
+              <institution>Japan Science and Technology Corporation</institution>
+            </institution-wrap>
+          </funding-source>
+          <award-id>JPMJCR17A5</award-id>
+          <principal-award-recipient>
+            <name name-style="western">
+              <surname>Nakazawa</surname>
+              <given-names>Atsushi</given-names>
+            </name>
+          </principal-award-recipient>
+        </award-group>
+        <funding-statement>AN JPMJCR17A5 JST CREST <ext-link ext-link-type="uri"
+            xlink:href="https://www.jst.go.jp/kisoken/crest/en/" xlink:type="simple">
+          https://www.jst.go.jp/kisoken/crest/en/</ext-link>. </funding-statement>
+      </funding-group>
+      <counts>
+        <fig-count count="13" />
+        <table-count count="4" />
+        <page-count count="19" />
+      </counts>
+      <custom-meta-group>
+        <custom-meta id="data-availability">
+          <meta-name>Data Availability</meta-name>
+          <meta-value>The dataset has been provided and is available online at <ext-link
+              ext-link-type="uri"
+              xlink:href="https://data.mendeley.com/datasets/cchsk79jkt/1"
+              xlink:type="simple">https://data.mendeley.com/datasets/cchsk79jkt/1</ext-link> .</meta-value>
+        </custom-meta>
+      </custom-meta-group>
+    </article-meta>
+  </front>
+  <body>
+    <sec id="sec001" sec-type="intro">
+      <title>Introduction</title>
+      <p>Observation of patients’ leftover food is a daily task in hospitals since it can evaluate
+        patients’ nutritional intake. By analyzing patients’ leftovers, healthcare professionals can
+        obtain valuable insights into the patient’s health status [ <xref
+          ref-type="bibr" rid="pone.0320426.ref001">1</xref>], including malnutrition [ <xref
+          ref-type="bibr" rid="pone.0320426.ref002">2</xref>] and depression [ <xref
+          ref-type="bibr" rid="pone.0320426.ref003">3</xref>]. Excessive leftovers can not only be a
+        barrier to cost-saving measures but also negatively impact patients’ recovery rates. Thus,
+        it is essential to improve the quality and taste of meals in nutrition facilities to reduce
+        food waste and improve patient outcomes [ <xref
+          ref-type="bibr" rid="pone.0320426.ref004">4</xref>]. In a hospital context, analyzing meal
+        leftovers give significant information regarding numerous areas of the hospital’s food
+        service [ <xref ref-type="bibr" rid="pone.0320426.ref005">5</xref>]. Based on a food waste
+        survey conducted at a regional public hospital in Sidoarjo, Indonesia, there is a high
+        residual rate of patient food, above the standard of 20% Limited meal variation, variances
+        in inpatient classes, a lack of diversity in menu items, and patients not touching the same
+        food due to surgery all contribute to this high residue. As a result, there is a massive
+        loss of food that the patients did not consume [ <xref ref-type="bibr"
+          rid="pone.0320426.ref006">6</xref>]. Hospitals also assess patient satisfaction with meals
+        delivered by studying food leftovers [ <xref
+          ref-type="bibr" rid="pone.0320426.ref007">7</xref>]. Thus, recording and evaluating
+        leftovers in hospital and long-term care settings is an important task in terms of quality
+        of care and environment. It is also important for the general consumer market.</p>
+      <p>Human visual estimation simplifies the weighing process, which is called subjective
+        evaluation. Dietitians or nutritionists in hospital settings rely on qualified assessors to
+        weigh food or perform visual examinations such as Comstock level analysis [ <xref
+          ref-type="bibr" rid="pone.0320426.ref008">8</xref>, <xref
+          ref-type="bibr" rid="pone.0320426.ref009">9</xref>]. Comstock level prediction is widely
+        used in food consumption surveys to assess leftover food. This approach is the most popular
+        and used in hospitals [ <xref ref-type="bibr"
+          rid="pone.0320426.ref010">10</xref>]. However, it not only requires a meticulous, skilled
+        and trained estimator, but is also prone to frequent overestimation or underestimation,
+        resulting in uncertainty about the actual food intake of patients or others. Based on these
+        backgrounds, several researchers have leveraged artificial intelligence (AI) in an attempt
+        to minimize the estimation errors in visual observations [ <xref ref-type="bibr"
+          rid="pone.0320426.ref011">11</xref> – <xref
+          ref-type="bibr" rid="pone.0320426.ref013">13</xref>]. This could serve as a decision
+        support tool for dietitians and nutritionists estimating food leftovers of hospitalized
+        patients.</p>
+      <p>In this paper, we propose a method to solve this problem by deep learning-based image
+        recognition. Specifically, we have developed a method to estimate the amount of food eaten
+        with higher accuracy than human observation, simply by inputting images before and after
+        serving. Existing studies used simple image processing techniques such as counting areas
+        using image segmentation; however, the method had large measurement errors [ <xref
+          ref-type="bibr" rid="pone.0320426.ref014">14</xref>]. In recent years, deep learning has
+        been used in research on areas such as daily food consumption, improving bodily health, and
+        reducing the occurrence of diseases. These universal methods can be applied to various
+        domains without explicit feature extraction, allowing for extensive application in food
+        computing, especially through image recognition for nutrition analysis [ <xref
+          ref-type="bibr"
+          rid="pone.0320426.ref015">15</xref>]. [ <xref ref-type="bibr"
+          rid="pone.0320426.ref011">11</xref>] used convolutional neural-network (CNN) to estimate
+        the amount of leftover liquid meals in hospitals. In deep learning projects, VGG and ResNet
+        as examples of CNN models are often used as baselines. VGG architecture primarily comprises
+        convolutional layers utilizing 3x3 filters along with max-pooling layers, illustrating that
+        enhancing its depth can lead to better performance overall [ <xref ref-type="bibr"
+          rid="pone.0320426.ref016">16</xref>]. ResNet architecture help address the vanishing
+        gradient issue in deep neural networks. These pathways enable information to traverse
+        through layers, enhancing the network’s learning capabilities. By preserving or boosting
+        performance, ResNets are capable of achieving a greater depth compared to VGG networks [ <xref
+          ref-type="bibr" rid="pone.0320426.ref017">17</xref>]. VGG networks are commonly used as a
+        standard for comparison due to their high performance in image classification tasks [ <xref
+          ref-type="bibr" rid="pone.0320426.ref018">18</xref>]. On the other hand, ResNet is also
+        frequently used as a benchmark in experiments designed to test the scalability of new
+        topologies or their effectiveness in deeper networks [ <xref
+          ref-type="bibr"
+          rid="pone.0320426.ref017">17</xref>]. The CNN model has not yet been applied to a limited
+        dataset with imbalanced data in each food category to predict leftover foods objectively.
+        Therefore, in this study, a multitasking model was implemented to calculate leftover food.
+        Against this background, this study has the following highlights:</p>
+      <list list-type="order">
+        <list-item>
+          <p>The first large-scale open dataset for leftover food prediction was
+            presented. The dataset contains 524 pairs of images from 34 food categories
+            showing the food portions before and after consumption. In addition, there
+            is data on the observed amount of leftover food and the results of weighing
+            using digital scales both before and after consumption.</p>
+        </list-item>
+        <list-item>
+          <p>A novel method for predicting leftovers and food categories using deep
+            learning, which outperforms human observation.</p>
+        </list-item>
+        <list-item>
+          <p>In an experiment, we implemented and compared several network architectures.
+            As a result, the methods using multi-task (MT) learning architecture
+            performed better than that of not using MT learning.</p>
+        </list-item>
+      </list>
+      <p>The remainder of this paper is organised as follows. [sec:related_work]Sect 1
+        outlines the related research on this topic. In [sec:dataset]Sect 2, a detailed
+        description of the dataset is presented. [sec:method]Sect 3 explains methodology of
+        this research. In [sec:results]Sect 4, the experimental results used as a baseline
+        are presented. A discussion is provided in [sec:discussion]Sect 5, and limitations
+        are elaborated in [sec:limitations]Sect 6. Finally, the article is concluded in
+        [sec:conclusion]Sect 7.</p>
+    </sec>
+    <sec id="sec002">
+      <title>1. Related work</title>
+      <p>Relevant literature on image-based food analysis and leftover prediction is reviewed in
+        this section. Aizawa <italic>et al</italic>. [ <xref ref-type="bibr"
+          rid="pone.0320426.ref019">19</xref>] proposed an approach that uses images to obtain
+        individual dietary patterns to improve food balance estimation. Their food recording system
+        included food image extraction [ <xref ref-type="bibr"
+          rid="pone.0320426.ref020">20</xref>], food balance analysis [ <xref
+          ref-type="bibr" rid="pone.0320426.ref021">21</xref>], and summarization and visualization
+        [ <xref ref-type="bibr" rid="pone.0320426.ref022">22</xref>]. Food photos act as input to
+        identify categories and weights in the nutritional evaluation system developed in [ <xref
+          ref-type="bibr" rid="pone.0320426.ref023">23</xref>]. Shape templates and area-based
+        weights are used to increase the accuracy of the system [ <xref
+          ref-type="bibr"
+          rid="pone.0320426.ref021">21</xref>, <xref
+          ref-type="bibr" rid="pone.0320426.ref024">24</xref>, <xref ref-type="bibr"
+          rid="pone.0320426.ref025">25</xref>]. Several methods showed the algorithm of calculating
+        the number of food regions pixel-wise or segmented-based algorithms [ <xref
+          ref-type="bibr" rid="pone.0320426.ref026">26</xref>]. [ <xref ref-type="bibr"
+          rid="pone.0320426.ref026">26</xref>– <xref ref-type="bibr"
+          rid="pone.0320426.ref028">28</xref>] attempted to estimate food waste from images of
+        plates before and after a meal, taking into account background variations and the need for
+        background removal. The algorithm identified utensils as part of the plate during and after
+        a meal, resulting in an estimation inaccuracy of 45.8%. Hence, due to the inherent
+        limitations in accuracy and adaptability of the pixel-wise method in leftover calculation,
+        an alternative strategy is required.</p>
+      <p>Recently, deep learning has been used in research in areas such as [ <xref
+          ref-type="bibr" rid="pone.0320426.ref011">11</xref>] that compares the accuracy of
+        estimating liquid food residue using computer vision. The study focuses only on liquid foods
+        and provides recommendations for future research to determine whether AI-based measurement
+        techniques can be readily used by medical professionals in clinical settings, as the
+        usefulness of the proposed AI-based measurement method is currently unknown. The AI
+        estimation approach had lower errors than the visual estimation approach for fermented milk,
+        peach juice, and total. However, there was no significant difference in errors for thin rice
+        gruel. Errors in AI estimation were biased towards leftovers. Overall, AI estimation had
+        smaller mean squared errors and higher coefficient of determination values for fermented
+        milk and peach juice compared to visual estimation. Total <italic>R</italic>2 value was
+        equal in accuracy for both AI and visual estimations.</p>
+      <p>Another research uses a deep learning object identification network to identify food
+        categories and calculate meal consumption levels in pre- and post-meal photographs. The
+        method uses mask R-CNN to identify food categories and homography transformation to correct
+        post-meal images based on meal plate regions. Meal intakes are estimated by comparing
+        pre-meal and post-meal images of measured food volumes. However, this method is limited by
+        the definition of the shape of the food in the container in 3D shapes, whether a spherical
+        cap, cone, or cuboid [ <xref ref-type="bibr"
+          rid="pone.0320426.ref029">29</xref>].</p>
+      <p>Other studies connected to artificial intelligence are also utilized for measuring food
+        intake [ <xref ref-type="bibr" rid="pone.0320426.ref030">30</xref>]. A smartphone-based
+        system named FoodIntech uses AI to recognize and calculate food leftovers without human
+        intervention. The system uses images of a QR code on the meal tray to detect and recognize
+        food items. Testing showed the method to be reliable, with excellent results for 39% of
+        dishes and good results for 19%. Implementing this method can improve dish recognition and
+        can be expanded with more photos to include new dishes and foods. This study employs deep
+        learning techniques for the segmentation of areas. However, the calculation of food waste is
+        based on pixel-wise resolution, which presents a limitation. The accuracy of the pixel-wise
+        calculation heavily relies on the quality of the segmentation of food areas.</p>
+      <p>The hospital can utilize various datasets based on its specific requirements and different
+        methodological approaches to address this issue. The primary focus of this research is on
+        analyzing remaining food from 2D images, enabling the predictive learning model to
+        accurately predict leftovers and recognize different types of food simultaneously. We
+        encountered challenges when searching for a comparable dataset that includes information on
+        food consumption before and after specific weight measurements and leftovers, particularly
+        within a hospital environment. A paper closely related to our research has been previously
+        published by [ <xref
+          ref-type="bibr" rid="pone.0320426.ref011">11</xref>]. However, the dataset in the study
+        mainly focuses on liquid foods, such as 432 servings of rice, 72 servings of fermented milk,
+        and 72 servings of peach juice. Unfortunately, this dataset is not available for public use,
+        preventing us from utilizing it for future research and development.</p>
+    </sec>
+    <sec id="sec003">
+      <title>2 Dataset</title>
+      <p>This chapter describes the details of the dataset we have constructed. The dataset can be
+        accessed at the following link: <ext-link ext-link-type="uri"
+          xlink:href="https://data.mendeley.com/datasets/cchsk79jkt/1" xlink:type="simple">
+        https://data.mendeley.com/datasets/cchsk79jkt/1</ext-link>.</p>
+      <sec id="sec004">
+        <title>2.1 Data acquisition</title>
+        <p>Images were taken at a hospital in Malang, Indonesia, using a Nikon D3200 DSLR camera.
+          The focus of the study was a single food item with solid and liquid components. Solid and
+          liquid foods were served on plates and in bowls, respectively. White dishes were used
+          throughout. To photograph the food, we used a camera, tripod, external flash, table,
+          wooden placemat, reflector, and sheet of paper as illustrated in <xref ref-type="fig"
+            rid="pone.0320426.g001">Fig 1</xref>. The food was presented on a 78×78cm wooden
+          placemat with a black and white checkerboard pattern, with each grid measuring 2×2cm. The
+          placemat was placed on a table measuring 80 cm in length, 80 cm in width, and 75.5 cm in
+          height to ensure optimal and consistent plate or bowl placement during data collection.
+          The camera was set as follows: F = 4.5, ISO 100, exposure = -2, manual flash mode with
+          REPEAT 1/128, wide camera range, AF-2 focus mode, and positioned at a 45-degree angle to
+          the diagonal meeting point of a placemat. The camera was then mounted on a tripod at
+          maximum height and positioned 53.5 cm from the diagonal meeting point of a placemat. We
+          used a white cloth reflector stretched on three sides of the placemat opposite the camera
+          to improve the image quality. The data consisted of images of meals taken before and after
+          consumption and the difference in weight obtained by physical measurements. The weight was
+          measured by weighing the plate containing food using a digital scale.</p>
+        <fig id="pone.0320426.g001" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g001</object-id>
+          <label>Fig 1</label>
+          <caption>
+            <title>Setting up the environment for data acquisition.</title>
+          </caption>
+          <graphic mimetype="image" position="float"
+            xlink:href="info:doi/10.1371/journal.pone.0320426.g001" xlink:type="simple" />
+        </fig>
+      </sec>
+      <sec id="sec005">
+        <title>2.2 Dataset annotation</title>
+        <p>The dataset comprises 524 image pairs before and after consumption. For each image pair,
+          the following information is annotated as shown in <xref
+            ref-type="table" rid="pone.0320426.t001">Table 1</xref>.</p>
+        <table-wrap id="pone.0320426.t001" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0320426.t001</object-id>
+          <label>Table 1</label>
+          <caption>
+            <title>The detail of the dataset showing the ID, food name, the number of
+              example pairs in total and each food leftover level given by a human
+              observer, where the leftover level is ranging from 1 (Not consumed at
+              all) to 7 (zero remaining).</title>
+          </caption>
+          <alternatives>
+            <graphic id="pone.0320426.t001g" mimetype="image" position="float"
+              xlink:href="info:doi/10.1371/journal.pone.0320426.t001"
+              xlink:type="simple" />
+            <table>
+              <colgroup>
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th align="left">ID</th>
+                  <th align="left">Name</th>
+                  <th align="left">Total</th>
+                  <th align="left" colspan="7">Leftover level (human obs.)</th>
+                </tr>
+                <tr>
+                  <td align="left" />
+                  <td align="left" />
+                  <td align="left" />
+                  <td align="left">1</td>
+                  <td align="left">2</td>
+                  <td align="left">3</td>
+                  <td align="left">4</td>
+                  <td align="left">5</td>
+                  <td align="left">6</td>
+                  <td align="left">7</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left">1</td>
+                  <td align="left">Bubur ( <italic>Porridge</italic>)</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                </tr>
+                <tr>
+                  <td align="left">2</td>
+                  <td align="left">Nasi ( <italic>Rice</italic>)</td>
+                  <td align="left">78</td>
+                  <td align="left">14</td>
+                  <td align="left">1</td>
+                  <td align="left">7</td>
+                  <td align="left">8</td>
+                  <td align="left">11</td>
+                  <td align="left">9</td>
+                  <td align="left">28</td>
+                </tr>
+                <tr>
+                  <td align="left">3</td>
+                  <td align="left">Tim (Rice Porridge)</td>
+                  <td align="left">76</td>
+                  <td align="left">9</td>
+                  <td align="left">1</td>
+                  <td align="left">8</td>
+                  <td align="left">14</td>
+                  <td align="left">9</td>
+                  <td align="left">8</td>
+                  <td align="left">27</td>
+                </tr>
+                <tr>
+                  <td align="left">4</td>
+                  <td align="left">Telur Orak Arik ( <italic>Scrambled Eggs</italic> )</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                </tr>
+                <tr>
+                  <td align="left">5</td>
+                  <td align="left">Kroket Daging ( <italic>Meat Croquettes</italic> )</td>
+                  <td align="left">19</td>
+                  <td align="left">2</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">2</td>
+                  <td align="left">1</td>
+                  <td align="left">14</td>
+                </tr>
+                <tr>
+                  <td align="left">6</td>
+                  <td align="left">Opor Ayam ( <italic>Chicken Braised in Coconut
+                      Milk)</italic></td>
+                  <td align="left">2</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                </tr>
+                <tr>
+                  <td align="left">7</td>
+                  <td align="left">Opor Telur ( <italic>Opor Eggs</italic>)</td>
+                  <td align="left">2</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                </tr>
+                <tr>
+                  <td align="left">8</td>
+                  <td align="left">Ikan Acar Kuning ( <italic>Yellow Pickled Fish</italic> )</td>
+                  <td align="left">20</td>
+                  <td align="left">6</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">2</td>
+                  <td align="left">2</td>
+                  <td align="left">1</td>
+                  <td align="left">7</td>
+                </tr>
+                <tr>
+                  <td align="left">9</td>
+                  <td align="left">Bali Putih Telur ( <italic>Bali Egg White</italic> )</td>
+                  <td align="left">4</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">2</td>
+                  <td align="left">1</td>
+                </tr>
+                <tr>
+                  <td align="left">10</td>
+                  <td align="left">Bali Telur ( <italic>Bali Eggs</italic>)</td>
+                  <td align="left">21</td>
+                  <td align="left">5</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">2</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">13</td>
+                </tr>
+                <tr>
+                  <td align="left">11</td>
+                  <td align="left">Ayam Bumbu Srundeng ( <italic>Srundeng Seasoned
+                      Chicken</italic>)</td>
+                  <td align="left">9</td>
+                  <td align="left">3</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">3</td>
+                </tr>
+                <tr>
+                  <td align="left">12</td>
+                  <td align="left">Rendang Ayam ( <italic>Chicken Rendang</italic> )</td>
+                  <td align="left">18</td>
+                  <td align="left">3</td>
+                  <td align="left">1</td>
+                  <td align="left">2</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">4</td>
+                  <td align="left">7</td>
+                </tr>
+                <tr>
+                  <td align="left">13</td>
+                  <td align="left">Ayam Bumbu Laos ( <italic>Galangal Seasoned
+                      Chicken</italic>)</td>
+                  <td align="left">16</td>
+                  <td align="left">7</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">2</td>
+                  <td align="left">3</td>
+                </tr>
+                <tr>
+                  <td align="left">14</td>
+                  <td align="left">Ayam Bumbu Bistik ( <italic>Steak Seasoned
+                      Chicken</italic>)</td>
+                  <td align="left">22</td>
+                  <td align="left">3</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">3</td>
+                  <td align="left">2</td>
+                  <td align="left">5</td>
+                  <td align="left">9</td>
+                </tr>
+                <tr>
+                  <td align="left">15</td>
+                  <td align="left">Ikan Bb Asam Manis ( <italic>Sweet and Sour
+                      Seasoned Fish</italic>)</td>
+                  <td align="left">14</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">2</td>
+                  <td align="left">2</td>
+                  <td align="left">0</td>
+                  <td align="left">2</td>
+                  <td align="left">7</td>
+                </tr>
+                <tr>
+                  <td align="left">16</td>
+                  <td align="left">Telur Mata Sapi ( <italic>Sunny Side Up</italic> )</td>
+                  <td align="left">20</td>
+                  <td align="left">3</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">2</td>
+                  <td align="left">2</td>
+                  <td align="left">12</td>
+                </tr>
+                <tr>
+                  <td align="left">17</td>
+                  <td align="left">Ayam Suwir ( <italic>Shredded Chicken</italic>)</td>
+                  <td align="left">5</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">3</td>
+                </tr>
+                <tr>
+                  <td align="left">18</td>
+                  <td align="left">Oseng Bakso ( <italic>Stir Fry Meatballs</italic> )</td>
+                  <td align="left">5</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">2</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">2</td>
+                </tr>
+                <tr>
+                  <td align="left">19</td>
+                  <td align="left">Oseng Sosis ( <italic>Stir Fry Sausage</italic> )</td>
+                  <td align="left">4</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">2</td>
+                </tr>
+                <tr>
+                  <td align="left">20</td>
+                  <td align="left">Sambel Goreng Rempela Ati ( <italic>Sambal
+                      Goreng Rempela Ati</italic>)</td>
+                  <td align="left">15</td>
+                  <td align="left">9</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">2</td>
+                  <td align="left">4</td>
+                </tr>
+                <tr>
+                  <td align="left">21</td>
+                  <td align="left">Bola Bola Daging ( <italic>Meat Balls</italic> )</td>
+                  <td align="left">6</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">5</td>
+                </tr>
+                <tr>
+                  <td align="left">22</td>
+                  <td align="left">Tumis Bakso ( <italic>Stir Fry Meatballs</italic> )</td>
+                  <td align="left">12</td>
+                  <td align="left">1</td>
+                  <td align="left">2</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">8</td>
+                </tr>
+                <tr>
+                  <td align="left">23</td>
+                  <td align="left">Dadar Jagung Goreng <italic>(Fried Corn Omelet</italic> )</td>
+                  <td align="left">6</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">5</td>
+                </tr>
+                <tr>
+                  <td align="left">24</td>
+                  <td align="left">Bali Tahu ( <italic>Balinese Tofu</italic>)</td>
+                  <td align="left">22</td>
+                  <td align="left">10</td>
+                  <td align="left">2</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">10</td>
+                </tr>
+                <tr>
+                  <td align="left">25</td>
+                  <td align="left">Perkedel Kentang ( <italic>Potato Cakes</italic> )</td>
+                  <td align="left">22</td>
+                  <td align="left">3</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">2</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">16</td>
+                </tr>
+                <tr>
+                  <td align="left">26</td>
+                  <td align="left">Tahu Goreng ( <italic>Fried Tofu</italic>)</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                </tr>
+                <tr>
+                  <td align="left">27</td>
+                  <td align="left">Tahu Bumbu Kecap ( <italic>Tofu Soy Sauce</italic> )</td>
+                  <td align="left">19</td>
+                  <td align="left">4</td>
+                  <td align="left">3</td>
+                  <td align="left">2</td>
+                  <td align="left">3</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">6</td>
+                </tr>
+                <tr>
+                  <td align="left">28</td>
+                  <td align="left">Tempe Bumbu Kuning ( <italic>Yellow Seasoning
+                      Tempeh</italic>)</td>
+                  <td align="left">3</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left" />
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                </tr>
+                <tr>
+                  <td align="left">29</td>
+                  <td align="left">Tempe Goreng ( <italic>Fried Tempe</italic>)</td>
+                  <td align="left">6</td>
+                  <td align="left">3</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">3</td>
+                </tr>
+                <tr>
+                  <td align="left">30</td>
+                  <td align="left">Tempe Bumbu Bacem ( <italic>Seasoned Tempeh</italic> )</td>
+                  <td align="left">28</td>
+                  <td align="left">6</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">2</td>
+                  <td align="left">16</td>
+                </tr>
+                <tr>
+                  <td align="left">31</td>
+                  <td align="left">Tahu Bulat ( <italic>Round Tofu</italic>)</td>
+                  <td align="left">11</td>
+                  <td align="left">5</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">4</td>
+                </tr>
+                <tr>
+                  <td align="left">32</td>
+                  <td align="left">Orek Tempe ( <italic>Orek Tempeh</italic>)</td>
+                  <td align="left">22</td>
+                  <td align="left">3</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">5</td>
+                  <td align="left">2</td>
+                  <td align="left">2</td>
+                  <td align="left">10</td>
+                </tr>
+                <tr>
+                  <td align="left">33</td>
+                  <td align="left">Dadar Jagung Kukus ( <italic>Steamed Corn
+                      Omelet</italic>)</td>
+                  <td align="left">3</td>
+                  <td align="left">2</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                  <td align="left">1</td>
+                  <td align="left">0</td>
+                  <td align="left">0</td>
+                </tr>
+                <tr>
+                  <td align="left">34</td>
+                  <td align="left">Oseng Tahu ( <italic>Oseng Tofu</italic>)</td>
+                  <td align="left">11</td>
+                  <td align="left">1</td>
+                  <td align="left">2</td>
+                  <td align="left">2</td>
+                  <td align="left">3</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                  <td align="left">1</td>
+                </tr>
+              </tbody>
+            </table>
+          </alternatives>
+        </table-wrap>
+        <list list-type="simple">
+          <list-item>
+            <p>
+              <bold>id</bold> The IDs for the food category.</p>
+          </list-item>
+          <list-item>
+            <p>
+              <bold>name</bold> The name of the food.</p>
+          </list-item>
+          <list-item>
+            <p>
+              <bold>weight_before</bold> The weight of meal before eaten (gram as unit measurement).</p>
+          </list-item>
+          <list-item>
+            <p>
+              <bold>weight_after</bold> The weight of meal after eaten (gram as unit measurement).</p>
+          </list-item>
+          <list-item>
+            <p>
+              <bold>visual observation of leftover</bold> Level of leftover given by a trained
+              observer or skilled trainer based on visual estimation ranging from 1 (Not consumed at
+              all) to 7 (zero remaining). Samples for each level are presented in <xref
+                ref-type="fig" rid="pone.0320426.g002">Fig
+                2</xref>.</p>
+          </list-item>
+        </list>
+        <fig id="pone.0320426.g002" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g002</object-id>
+          <label>Fig 2</label>
+          <caption>
+            <title>Example of pictures taken before and after eating based on seven
+              different levels of leftovers.</title>
+          </caption>
+          <graphic mimetype="image" position="float"
+            xlink:href="info:doi/10.1371/journal.pone.0320426.g002" xlink:type="simple" />
+        </fig>
+      </sec>
+      <sec id="sec006">
+        <title>2.3 Dataset analysis</title>
+        <p>
+          <xref ref-type="fig" rid="pone.0320426.g003">Fig 3</xref> and <xref
+            ref-type="table" rid="pone.0320426.t002">Table 2</xref> show the correlation between the
+          leftover level (human observation) and the weight eaten (normalized from 0 to 1). As seen,
+          a strong correlation was found between the two data; namely, the Pearson correlation <italic>
+          r</italic> between them is 0.95. It is also found that the standard deviations of the
+          weights in levels 1 and 7 as described in <xref ref-type="fig"
+            rid="pone.0320426.g002">Fig
+            2</xref> are relatively smaller than those in levels 2 to 6. These statistics suggest a
+          larger difference in judgments when the observer predicted at the intermediate levels.</p>
+        <fig id="pone.0320426.g003" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g003</object-id>
+          <label>Fig 3</label>
+          <caption>
+            <title>The relation of leftover levels of human visual observation (x-axis)
+              and weight (y-axis), where the Peason’s correlation r = 0.95.</title>
+          </caption>
+          <graphic mimetype="image" position="float"
+            xlink:href="info:doi/10.1371/journal.pone.0320426.g003" xlink:type="simple" />
+        </fig>
+        <table-wrap id="pone.0320426.t002" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0320426.t002</object-id>
+          <label>Table 2</label>
+          <caption>
+            <title>The relation between leftover levels and weight.</title>
+          </caption>
+          <alternatives>
+            <graphic id="pone.0320426.t002g" mimetype="image" position="float"
+              xlink:href="info:doi/10.1371/journal.pone.0320426.t002"
+              xlink:type="simple" />
+            <table>
+              <colgroup>
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th align="left">Leftover level</th>
+                  <th align="left">7</th>
+                  <th align="left">6</th>
+                  <th align="left">5</th>
+                  <th align="left">4</th>
+                  <th align="left">3</th>
+                  <th align="left">2</th>
+                  <th align="left">1</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left">weight (a.v.)</td>
+                  <td align="left">0.029</td>
+                  <td align="left">0.153</td>
+                  <td align="left">0.270</td>
+                  <td align="left">0.436</td>
+                  <td align="left">0.620</td>
+                  <td align="left">0.813</td>
+                  <td align="left">0.978</td>
+                </tr>
+                <tr>
+                  <td align="left">weight (S.D.)</td>
+                  <td align="left">0.11</td>
+                  <td align="left">0.20</td>
+                  <td align="left">0.20</td>
+                  <td align="left">0.17</td>
+                  <td align="left">0.13</td>
+                  <td align="left">0.17</td>
+                  <td align="left">0.09</td>
+                </tr>
+              </tbody>
+            </table>
+          </alternatives>
+        </table-wrap>
+      </sec>
+    </sec>
+    <sec id="sec007">
+      <title>3. Method</title>
+      <sec id="sec008">
+        <title>3.1 Network architectures</title>
+        <p>We designed four end-to-end convolutional neural networks to infer the amount of food
+          consumed from two images (before and after eating). <xref ref-type="fig"
+            rid="pone.0320426.g004">Fig 4</xref> shows the network structures. In all architectures,
+          image features are extracted by feature extraction networks, concatenated, and transferred
+          to fully connected (FC) network(s).</p>
+        <fig id="pone.0320426.g004" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g004</object-id>
+          <label>Fig 4</label>
+          <caption>
+            <title>Network architectures.</title>
+            <p>(a) Single task (ST) model, (b) Multit-ask (MT) model, (c) Single task model with
+              Ground Truth food category (ST-GT), and (d) Multi-task model with inter-task
+              connection (MT-IC). The feature extraction layers are pre-trained CNN, including
+              VGG11, VGG13, VGG16, VGG19, ResNet50, ResNet101, or ResNet152. FC1, FC2, FC3, FC4, and
+              FC1+ are fully connected layers whose input and output dimensions are (4096, 1024),
+              (1025, 512), (512, 1), (512, 50), and (4096+34, 1024), respectively. <italic>
+                y</italic>
+                            <sub>
+                <italic>lo</italic>
+              </sub> and <italic>y</italic>
+                            <sub>
+                <italic>cat</italic>
+              </sub> are the normalized leftover level (0.0 -
+              1.0) and food category, and <italic>
+                label</italic>
+                            <sub>
+                <italic>cat</italic>
+              </sub> in the model (c) is the label of the
+              ground-truth food category.</p>
+          </caption>
+          <graphic mimetype="image" position="float"
+            xlink:href="info:doi/10.1371/journal.pone.0320426.g004" xlink:type="simple" />
+        </fig>
+        <p>The single-task (ST) model is a naive regression model for leftovers, and the
+          multi-task (MT) model outputs the amount of leftovers and the food category
+          simultaneously. The single-task model with ground truth (ST-GT) is a model
+          assumed to be used when the food category is given. Namely, the ground truth
+          food category is combined to the first fully connected layer. The multi-task
+          model with inter-task connection (MT-IC) is designed to provide feedback on the
+          inference result of the food category and is explicitly used for leftover
+          estimation. A model with food classification as ground truth was also
+          incorporated, designated as the MT model with Food Category Ground Truth
+          Feedback (MT-GT). This model is employed for the general evaluation of
+          performance in comparison to the MT-IC model. Fundamentally, food classification
+          in the MT-GT model is determined based on the provided label, which is expected
+          to result in a lower error rate compared to the MT-IC model.</p>
+      </sec>
+      <sec id="sec009">
+        <title>3.2 Loss function and training</title>
+        <p>Regarding the leftover value, the networks are trained to output the leftover value
+          normalized from 0.0 to 1.0. Assuming the output of the network as <italic>
+            y</italic>
+                    <sub>
+            <italic>lo</italic>
+          </sub>, the loss function <italic>L</italic>
+                    <sub>
+            <italic>lo</italic>
+          </sub> is given as in <xref
+            ref-type="disp-formula" rid="pone.0320426.e003">Equation 1</xref>,</p>
+        <disp-formula id="pone.0320426.e003">
+          <alternatives>
+            <graphic id="pone.0320426.e003g" mimetype="image" position="anchor"
+              xlink:href="info:doi/10.1371/journal.pone.0320426.e003"
+              xlink:type="simple" />
+            <mml:math display="block" id="M1">
+              <mml:mrow>
+                <mml:mrow>
+                  <mml:msub>
+                    <mml:mi>L</mml:mi>
+                    <mml:mrow>
+                      <mml:mi>l</mml:mi>
+                      <mml:mi>o</mml:mi>
+                    </mml:mrow>
+                  </mml:msub>
+                  <mml:mo>=</mml:mo>
+                  <mml:mrow>
+                    <mml:mo fence="true" form="prefix" stretchy="true">|</mml:mo>
+                    <mml:msub>
+                      <mml:mi>y</mml:mi>
+                      <mml:mrow>
+                        <mml:mi>l</mml:mi>
+                        <mml:mi>o</mml:mi>
+                      </mml:mrow>
+                    </mml:msub>
+                    <mml:mo>−</mml:mo>
+                    <mml:mfrac>
+                      <mml:mrow>
+                        <mml:mtext>weight_before</mml:mtext>
+                        <mml:mo>−</mml:mo>
+                        <mml:mtext>weight_after</mml:mtext>
+                      </mml:mrow>
+                      <mml:mrow>
+                        <mml:mtext>weight_before</mml:mtext>
+                      </mml:mrow>
+                    </mml:mfrac>
+                    <mml:mo fence="true" form="postfix" stretchy="true">|</mml:mo>
+                  </mml:mrow>
+                </mml:mrow>
+              </mml:mrow>
+            </mml:math>
+          </alternatives>
+          <label>(1)</label>
+        </disp-formula>
+        <p>Regarding the inference of food category, the loss function <italic>L</italic>
+                    <sub>
+            <italic>cat</italic>
+          </sub> is given as the binary cross entropy, namely, as
+          stated in <xref ref-type="disp-formula"
+            rid="pone.0320426.e004">Equation 2
+
+
+          </xref></p>
+        <disp-formula id="pone.0320426.e004">
+          <alternatives>
+            <graphic id="pone.0320426.e004g" mimetype="image" position="anchor"
+              xlink:href="info:doi/10.1371/journal.pone.0320426.e004"
+              xlink:type="simple" />
+            <mml:math display="block" id="M2">
+              <mml:mrow>
+                <mml:mrow>
+                  <mml:msub>
+                    <mml:mi>L</mml:mi>
+                    <mml:mrow>
+                      <mml:mi>c</mml:mi>
+                      <mml:mi>a</mml:mi>
+                      <mml:mi>t</mml:mi>
+                    </mml:mrow>
+                  </mml:msub>
+                  <mml:mo>=</mml:mo>
+                  <mml:mtext>binary_cross_entropy</mml:mtext>
+                  <mml:mo stretchy="false">(</mml:mo>
+                  <mml:msub>
+                    <mml:mi>y</mml:mi>
+                    <mml:mrow>
+                      <mml:mi>c</mml:mi>
+                      <mml:mi>a</mml:mi>
+                      <mml:mi>t</mml:mi>
+                    </mml:mrow>
+                  </mml:msub>
+                  <mml:mo>,</mml:mo>
+                  <mml:mi>l</mml:mi>
+                  <mml:mi>a</mml:mi>
+                  <mml:mi>b</mml:mi>
+                  <mml:mi>e</mml:mi>
+                  <mml:msub>
+                    <mml:mi>l</mml:mi>
+                    <mml:mrow>
+                      <mml:mi>c</mml:mi>
+                      <mml:mi>a</mml:mi>
+                      <mml:mi>t</mml:mi>
+                    </mml:mrow>
+                  </mml:msub>
+                  <mml:mo stretchy="false">)</mml:mo>
+                </mml:mrow>
+              </mml:mrow>
+            </mml:math>
+          </alternatives>
+          <label>(2)</label>
+        </disp-formula>
+        <p>where <italic>y</italic>
+                    <sub>
+            <italic>cat</italic>
+          </sub> and <italic>label</italic>
+                    <sub>
+            <italic>cat</italic>
+          </sub> are the inference result and the label of the food
+          category.</p>
+        <p>In training MT models (MT and MT-IC), both losses are linearly combined as <xref
+            ref-type="disp-formula" rid="pone.0320426.e005">Equation 3</xref>:</p>
+        <disp-formula id="pone.0320426.e005">
+          <alternatives>
+            <graphic id="pone.0320426.e005g" mimetype="image" position="anchor"
+              xlink:href="info:doi/10.1371/journal.pone.0320426.e005"
+              xlink:type="simple" />
+            <mml:math display="block" id="M3">
+              <mml:mrow>
+                <mml:mrow>
+                  <mml:msub>
+                    <mml:mi>L</mml:mi>
+                    <mml:mrow>
+                      <mml:mi>m</mml:mi>
+                      <mml:mi>t</mml:mi>
+                    </mml:mrow>
+                  </mml:msub>
+                  <mml:mo>=</mml:mo>
+                  <mml:mi>α</mml:mi>
+                  <mml:mi>×</mml:mi>
+                  <mml:mrow>
+                    <mml:msub>
+                      <mml:mi>L</mml:mi>
+                      <mml:mrow>
+                        <mml:mi>l</mml:mi>
+                        <mml:mi>o</mml:mi>
+                      </mml:mrow>
+                    </mml:msub>
+                  </mml:mrow>
+                  <mml:mo>+</mml:mo>
+                  <mml:mo stretchy="false">(</mml:mo>
+                  <mml:mn>1</mml:mn>
+                  <mml:mo>−</mml:mo>
+                  <mml:mi>α</mml:mi>
+                  <mml:mo stretchy="false">)</mml:mo>
+                  <mml:mi>×</mml:mi>
+                  <mml:mrow>
+                    <mml:msub>
+                      <mml:mi>L</mml:mi>
+                      <mml:mrow>
+                        <mml:mi>c</mml:mi>
+                        <mml:mi>a</mml:mi>
+                        <mml:mi>t</mml:mi>
+                      </mml:mrow>
+                    </mml:msub>
+                  </mml:mrow>
+                </mml:mrow>
+              </mml:mrow>
+            </mml:math>
+          </alternatives>
+          <label>(3)</label>
+        </disp-formula>
+        <p>In the implementation, we set <inline-formula id="pone.0320426.e006">
+            <alternatives>
+              <graphic id="pone.0320426.e006g" mimetype="image" position="anchor"
+                xlink:href="info:doi/10.1371/journal.pone.0320426.e006"
+                xlink:type="simple" />
+              <mml:math display="inline" id="M4">
+                <mml:mrow>
+                  <mml:mi>α</mml:mi>
+                </mml:mrow>
+              </mml:math>
+            </alternatives>
+          </inline-formula>
+          to 0.9. The models are optimized using the Adam optimizer with <italic>l</italic>
+                    <sub>
+            <italic>r</italic>
+          </sub> set to 0.0001. Early stopping was used to stop
+          training after the first 20 consecutive epochs if performance did not improve. The primary
+          goal of early stopping was to monitor the model’s performance on a separate validation
+          dataset that was different from the training dataset. The data augmentation used included
+          random horizontal flip, random vertical flip, random rotation, random padding, random
+          Gaussian blur, random sharpness adjustment, and random contrast with a probability of 1/7.</p>
+      </sec>
+    </sec>
+    <sec id="sec010" sec-type="results">
+      <title>4 Results</title>
+      <p>The data were divided into three sets: training, validation, and test sets. We used
+        7/10 for training, 2/10 for validation, and 1/10 for testing. Each model was tested
+        in 10-fold cross-validation and took their average.</p>
+      <sec id="sec011">
+        <title>4.1 Leftover level prediction</title>
+        <p>
+          <xref ref-type="table" rid="pone.0320426.t003">Table 3</xref> and <xref
+            ref-type="fig" rid="pone.0320426.g005">Fig 5</xref> shows the mean absolute error (MAE)
+          of leftover prediction of all models (ST, ST-GT, MT, and MT-IC) with different feature
+          extraction networks (ResNet50, Resnet101, ResNet152, VGG11, VGG13, VGG16, and VGG19). For
+          the reference, the MAE of human visual observation ( <xref ref-type="fig"
+            rid="pone.0320426.g002">Fig 2</xref>) was computed assuming the visual leftover level
+          1,...,7 as 1/7, 2/7, 3/7, ..., 1.0 and computed the MAE to the normalized weight values.
+          Overall, the ResNet group outperformed the VGG group in MAE and classification accuracy.
+          Regarding the network architecture, MT model outperformed others and human visual
+          observation, namely, MAE of human observation is 0.0926, while the MT model, MT-GT and
+          MT-IC with ResNet101 are 0.0801, 0.07826 and 0.0816, respectively.</p>
+        <fig id="pone.0320426.g005" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g005</object-id>
+          <label>Fig 5</label>
+          <caption>
+            <title>Result of food level estimation (mean absolute error (MAE), smaller
+              is better).</title>
+          </caption>
+          <graphic mimetype="image" position="float"
+            xlink:href="info:doi/10.1371/journal.pone.0320426.g005" xlink:type="simple" />
+        </fig>
+        <table-wrap id="pone.0320426.t003" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0320426.t003</object-id>
+          <label>Table 3</label>
+          <caption>
+            <title>Result of leftover level estimation (MAE (S.D)).</title>
+          </caption>
+          <alternatives>
+            <graphic id="pone.0320426.t003g" mimetype="image" position="float"
+              xlink:href="info:doi/10.1371/journal.pone.0320426.t003"
+              xlink:type="simple" />
+            <table>
+              <colgroup>
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th align="left">Feature extraction</th>
+                  <th align="left">ST</th>
+                  <th align="left">MT</th>
+                  <th align="left">ST-GT</th>
+                  <th align="left">MT-IC</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left">ResNet50</td>
+                  <td align="left">0.0830 (0.017)</td>
+                  <td align="left">0.0826 (0.017)</td>
+                  <td align="left">0.0854 (0.019)</td>
+                  <td align="left">0.0888 (0.019)</td>
+                </tr>
+                <tr>
+                  <td align="left">ResNet101</td>
+                  <td align="left">0.0846 (0.022)</td>
+                  <td align="left">
+                    <bold>0.0801</bold> (0.020)</td>
+                  <td align="left">
+                    <bold>0.0817</bold> (0.014)</td>
+                  <td align="left">
+                    <bold>0.0817</bold> (0.018)</td>
+                </tr>
+                <tr>
+                  <td align="left">ResNet152</td>
+                  <td align="left">
+                    <bold>0.0826</bold> (0.021)</td>
+                  <td align="left">0.0863 (0.019)</td>
+                  <td align="left">0.0828 (0.018)</td>
+                  <td align="left">0.0843 (0.019)</td>
+                </tr>
+                <tr>
+                  <td align="left">VGG11</td>
+                  <td align="left">0.0952 (0.022)</td>
+                  <td align="left">0.0952 (0.017)</td>
+                  <td align="left">0.0942 (0.027)</td>
+                  <td align="left">0.0939 (0.015)</td>
+                </tr>
+                <tr>
+                  <td align="left">VGG13</td>
+                  <td align="left">0.0928 (0.016)</td>
+                  <td align="left">0.0953 (0.018)</td>
+                  <td align="left">0.0926 (0.018)</td>
+                  <td align="left">0.0971 (0.022)</td>
+                </tr>
+                <tr>
+                  <td align="left">VGG16</td>
+                  <td align="left">0.0923 (0.022)</td>
+                  <td align="left">0.0918 (0.021)</td>
+                  <td align="left">0.0868 (0.020)</td>
+                  <td align="left">0.0919 (0.019)</td>
+                </tr>
+                <tr>
+                  <td align="left">VGG19</td>
+                  <td align="left">0.0844 (0.020)</td>
+                  <td align="left">0.0958 (0.020)</td>
+                  <td align="left">0.0880 (0.017)</td>
+                  <td align="left">0.0886 (0.021)</td>
+                </tr>
+                <tr>
+                  <td align="left">Human observation</td>
+                  <td align="left" colspan="4">
+                    <bold>0.0926</bold>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </alternatives>
+        </table-wrap>
+        <p>
+          <xref ref-type="fig" rid="pone.0320426.g006">Fig 6</xref> shows the MAE of each food
+          category. This allows the tendency of the food category results towards the food leftover
+          prediction results to be determined. Twenty-two food categories, representing 34
+          categories overall, demonstrate that the MT model outperformed human observation.
+          Meanwhile, the MT-GT and MT-IC models are better in 20 food categories compared to humans.
+          This indicates that the proposed MT model can accurately predict the majority of food
+          leftover levels.</p>
+        <fig id="pone.0320426.g006" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g006</object-id>
+          <label>Fig 6</label>
+          <caption>
+            <title>Class-wise MAE (smaller is better).</title>
+            <p>
+              <italic>x</italic>-axis shows the food ID.</p>
+          </caption>
+          <graphic mimetype="image" position="float"
+            xlink:href="info:doi/10.1371/journal.pone.0320426.g006" xlink:type="simple" />
+        </fig>
+      </sec>
+      <sec id="sec012">
+        <title>4.2 Food category classification</title>
+        <p>
+          <xref ref-type="table" rid="pone.0320426.t004">Table 4</xref> and <xref
+            ref-type="fig" rid="pone.0320426.g007">Fig 7</xref> show the accuracy of food
+          classification. Similar to the leftover level prediction, ResNet groups outperformed VGG
+          groups, namely, the accuracy reached 92.56% when ResNet152 were used to MT and MT-IC.</p>
+        <fig id="pone.0320426.g007" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g007</object-id>
+          <label>Fig 7</label>
+          <caption>
+            <title>Result of food classification accuracy (higher is better).</title>
+          </caption>
+          <graphic mimetype="image" position="float"
+            xlink:href="info:doi/10.1371/journal.pone.0320426.g007" xlink:type="simple" />
+        </fig>
+        <table-wrap id="pone.0320426.t004" position="float">
+          <object-id pub-id-type="doi">10.1371/journal.pone.0320426.t004</object-id>
+          <label>Table 4</label>
+          <caption>
+            <title>Result of food classification.</title>
+          </caption>
+          <alternatives>
+            <graphic id="pone.0320426.t004g" mimetype="image" position="float"
+              xlink:href="info:doi/10.1371/journal.pone.0320426.t004"
+              xlink:type="simple" />
+            <table>
+              <colgroup>
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+                <col align="left" valign="middle" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th align="left">Feature extraction</th>
+                  <th align="left">MT</th>
+                  <th align="left">MT-IC</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="left">ResNet50</td>
+                  <td align="left">0.912 (0.034)</td>
+                  <td align="left">0.924 (0.025)</td>
+                </tr>
+                <tr>
+                  <td align="left">ResNet101</td>
+                  <td align="left">0.904 (0.055)</td>
+                  <td align="left">
+                    <bold>0.926</bold> (0.041)</td>
+                </tr>
+                <tr>
+                  <td align="left">ResNet152</td>
+                  <td align="left">
+                    <bold>0.926</bold> (0.039)</td>
+                  <td align="left">
+                    <bold>0.926</bold> (0.029)</td>
+                </tr>
+                <tr>
+                  <td align="left">VGG11</td>
+                  <td align="left">0.895 (0.038)</td>
+                  <td align="left">0.899 (0.054)</td>
+                </tr>
+                <tr>
+                  <td align="left">VGG13</td>
+                  <td align="left">0.901 (0.043)</td>
+                  <td align="left">0.884 (0.032)</td>
+                </tr>
+                <tr>
+                  <td align="left">VGG16</td>
+                  <td align="left">0.886 (0.044)</td>
+                  <td align="left">0.884 (0.043)</td>
+                </tr>
+                <tr>
+                  <td align="left">VGG19</td>
+                  <td align="left">0.882 (0.023)</td>
+                  <td align="left">0.891 (0.047)</td>
+                </tr>
+              </tbody>
+            </table>
+          </alternatives>
+        </table-wrap>
+      </sec>
+    </sec>
+    <sec id="sec013" sec-type="conclusions">
+      <title>5 Discussion</title>
+      <p>In general, the proposed method, comprising the ST, ST-GT, MT, and MT-IC Models
+        utilizing ResNet101, exhibits a smaller error than a human observer’s visual
+        estimation. The incorporation of weight information derived from food classification
+        automatically from the fully connected layer (MT-IC Model) has also been observed to
+        enhance the precision of estimates, as evidenced by a reduction in standard
+        deviation values compared to the MT Model.</p>
+      <p>
+        <bold>Proposed v.s Human observation.</bold> The results of the analysis were subjected to
+        further investigation through the use of a visual explanation, which elucidates the
+        significance of feature extraction. The results of explainable visualization are represented
+        in GradCAM [ <xref ref-type="bibr"
+          rid="pone.0320426.ref031">31</xref>]. In most of the cases, the proposed algorithm grasped
+        the features of the food. However, in instances, it could not extract features and observed
+        wrong portions, such as empty regions when human observers were superior, as illustrated in <xref
+          ref-type="fig"
+          rid="pone.0320426.g008">Fig 8</xref>.</p>
+      <fig id="pone.0320426.g008" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g008</object-id>
+        <label>Fig 8</label>
+        <caption>
+          <title>Visualization of leftover prediction in MT Model vs Visual Estimation by
+            Human Observer.</title>
+        </caption>
+        <graphic mimetype="image" position="float"
+          xlink:href="info:doi/10.1371/journal.pone.0320426.g008" xlink:type="simple" />
+      </fig>
+      <p>
+        <bold>Methods comparison.</bold> Incorporating food type information into the regression
+        model to predict leftovers can improve the effectiveness of the regression procedure. This
+        is evidenced by <xref ref-type="fig"
+          rid="pone.0320426.g009">Fig 9</xref>, which illustrates that GradCAM with the MT-IC Model
+        (see <xref ref-type="fig" rid="pone.0320426.g009">Fig 9</xref>(b)) can effectively delineate
+        the object. In contrast, the GradCAM feature maps in the MT Model (see <xref ref-type="fig"
+          rid="pone.0320426.g009">Fig 9</xref>(a)) also cover plates and tables in the before image,
+        which impairs the success of feature extraction. This also indicates that, in the presence
+        of such conditions, the MAE of the MT Model is greater than the MT-IC Model. The impact of
+        incorporating food type information from the food classification task into the leftover
+        prediction regression task is also evident in the GradCAM results. These results are
+        corroborated by the MAE value, which indicates that GradCAM visualizations effectively
+        identify objects having a lower MAE than those that are unable to perform feature extraction
+        correctly.</p>
+      <fig id="pone.0320426.g009" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g009</object-id>
+        <label>Fig 9</label>
+        <caption>
+          <title>GradCAM of leftover prediction in MT Model and MT-IC Model of Tahu Bulat
+            (Round Tofu)).</title>
+        </caption>
+        <graphic mimetype="image" position="float"
+          xlink:href="info:doi/10.1371/journal.pone.0320426.g009" xlink:type="simple" />
+      </fig>
+      <p>
+        <bold>Food Classification.</bold> Overall, the accuracy of food classification based on
+        experimental findings in multi-task learning is notably high, exceeding 90%. In this
+        instance, MT-IC has a competitive edge over MT by incorporating food classification data
+        into the regression function to predict leftovers. <xref
+          ref-type="fig" rid="pone.0320426.g010">Fig 10</xref> demonstrates that errors in food
+        classification can occur when items belonging to various categories share resemblances in
+        terms of both color and shape.</p>
+      <fig id="pone.0320426.g010" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g010</object-id>
+        <label>Fig 10</label>
+        <caption>
+          <title>Incorrect food classification.</title>
+        </caption>
+        <graphic mimetype="image" position="float"
+          xlink:href="info:doi/10.1371/journal.pone.0320426.g010" xlink:type="simple" />
+      </fig>
+      <p>Adding class information into regression also has positive impacts on classification tasks,
+        including feature extraction. In <xref ref-type="fig" rid="pone.0320426.g011">Fig
+          11</xref>, for food type 12, that is Ayam Bumbu Laos ( <italic>Galangal Seasoned
+          Chicken</italic>), the feature map of MT-IC Model matches the shape of the object, as well
+        as MT-Model. In that model, the accuracy of the MT-IC Model is 92.86% while the MT Model
+        achieves 71.43%. Performance on food classification is somehow affected by the number of
+        data. The correlations between accuracy and the number of data for the MT Model and MT-IC
+        Model are 0.511 and 0.480, respectively. The correlations also show that the MT-IC Model has
+        a lower dependence on data size compared to the MT Model. On the other hand, the number of
+        data has less impact on food estimation results, indicated by the correlation of 0.061 and
+        0.163 for the MT Model and MT-IC Model, respectively.</p>
+      <fig id="pone.0320426.g011" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g011</object-id>
+        <label>Fig 11</label>
+        <caption>
+          <title>Impact in Food Classification Task: GradCAM of leftover prediction in MT
+            Model, and MT-IC Model of 12.Ayam Bumbu Laos (Galangal Seasoned Chicken).</title>
+        </caption>
+        <graphic mimetype="image" position="float"
+          xlink:href="info:doi/10.1371/journal.pone.0320426.g011" xlink:type="simple" />
+      </fig>
+    </sec>
+    <sec id="sec014">
+      <title>6 Limitations</title>
+      <p>The proposed method is susceptible to error when predicting leftovers that contain
+        excessive oil or a minimal amount of sauce (see <xref ref-type="fig"
+          rid="pone.0320426.g012">Fig 12</xref>). The predictions of human observers indicate that
+        the food has been completely consumed (100% consumed). In contrast, the multi-task learning
+        models (MT Model and MT-IC Model) indicate that there is still food remaining on the plate.
+        This is evidenced by GradCAM failing to generate a heatmap in the leftover prediction task,
+        indicating that no features are extracted effectively to predict leftovers. Despite the
+        failure of the leftover task to predict leftovers, the food recognition task demonstrates
+        the capacity to identify the type of food accurately.</p>
+      <fig id="pone.0320426.g012" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g012</object-id>
+        <label>Fig 12</label>
+        <caption>
+          <title>Failure cases (too oily dishes).</title>
+          <p>While humans are observed to be fully consumed, the proposed methods detect
+            the source (oil) as the food of leftover.)</p>
+        </caption>
+        <graphic mimetype="image" position="float"
+          xlink:href="info:doi/10.1371/journal.pone.0320426.g012" xlink:type="simple" />
+      </fig>
+      <p>In instances involving images of rice and rice porridge, human predictions typically
+        outperform computer algorithms due to the difficulties in accurately extracting features
+        from the objects. The generated heatmap does not emphasize the object itself but focuses on
+        the surrounding areas, including post-consumption changes undetectable by GradCAM (see <xref
+          ref-type="fig" rid="pone.0320426.g013">Fig 13</xref>). This discrepancy is largely
+        attributed to the similarity in color between the background and the object, thus
+        complicating the analysis process.</p>
+      <fig id="pone.0320426.g013" position="float">
+        <object-id pub-id-type="doi">10.1371/journal.pone.0320426.g013</object-id>
+        <label>Fig 13</label>
+        <caption>
+          <title>Failure case of extracting feature in rice (above) and rice porridge
+            (bottom).</title>
+        </caption>
+        <graphic mimetype="image" position="float"
+          xlink:href="info:doi/10.1371/journal.pone.0320426.g013" xlink:type="simple" />
+      </fig>
+      <p>In addition, the large number of sample data has an impact on the performance of the
+        proposed model. Ideally, a larger amount of data will lead to more accurate
+        predictions than a smaller amount of data. However, in this study, the sample data
+        used was imbalanced in several food categories, which resulted in inconsistencies in
+        the number of samples. In practice, this phenomenon occurs in hospital settings
+        where patients may receive different types of menus or foods based on their
+        individual dietary needs. The quantity of food in certain categories may be limited
+        due to the patient’s diet. While this research addresses the issue, further
+        enhancements to the model or performance of the proposed architecture can be
+        achieved by increasing the number of samples through image sample generation
+        techniques. However, the concern is not only for generating the images but also the
+        information information attached to this data, such as information on the weight of
+        food before and after consumption.</p>
+    </sec>
+    <sec id="sec015" sec-type="conclusions">
+      <title>7 Conclusion</title>
+      <p>This paper introduces a novel dataset featuring images captured before and after food
+        consumption. The dataset is augmented with subjective evaluations of the leftover
+        food by an observer and objective weight measurements using digital scales commonly
+        found in hospitals. The research findings illustrate the capability of utilizing the
+        AI approach that uses deep learning techniques to predict the amount of leftover
+        food both in subjective and objective evaluation. Overall, the MT Learning approach
+        is superior to human visualization estimation for predicting leftover amounts. We
+        propose two multi-task learning models: the MT and the MT-IC models. The optimal
+        results were achieved using ResNet101, with MAE of 0.0801 for the leftover task and
+        90.44% for the food classification accuracy task in the MT Model and 0.0817 for the
+        leftover task and 92.56% for the food classification accuracy task in the MT-IC
+        Model, respectively. In general, the MT Model is more effective than the ST Model.
+        The MT-IC Model is a model in which the ground truth food category information is
+        automatically extracted, thereby enabling the MT-IC Model to be automatically fed
+        from the food recognition task. The MT-IC Model is more precise than the MT Model,
+        as evidenced by the smaller standard deviation value observed in the MT-IC Model. In
+        addition, MT-IC is also effective for data sets with a limited number of samples.</p>
+      <p>This paper is not without its shortcomings. Firstly, The presence of oil or sauce in
+        image data disrupts the detection of objects that are then estimated. This can lead
+        to discrepancies between the assessment made by humans and that made by the proposed
+        model, with the latter classifying the objects as food waste. Secondly, feature
+        extraction remains an ongoing challenge when dealing with objects and backgrounds of
+        the same color. Lastly, the data is imbalanced across food categories and levels of
+        leftovers, which negatively impacts the accuracy of leftover predictions.</p>
+      <p>In future studies, it will be valuable to enlarge the dataset and investigate
+        multiple potential applications, including food recognition, food image
+        segmentation, food image retrieval, food image generation, and other techniques that
+        can precisely forecast leftover foods. Further research is required in the field of
+        nutritional analysis in hospitals using this dataset as an alternative for decision
+        support. Additional data pertaining to the composition of food ingredients are
+        necessary to predict the nutritional needs of patients.</p>
+    </sec>
+  </body>
+  <back>
+    <ack>
+      <p>We thank the students of the Faculty of Health Sciences at Brawijaya University in
+        Malang, Indonesia, for assisting in data collection at the hospital during the
+        research process. We thank Brawijaya University and Okayama University for their
+        support in creating the baseline performance and facilitating the further
+        development of this research. During the discussion and analysis, the authors would
+        like to thank Sigit Adinugroho from the Informatics Department at Brawijaya
+        University, Indonesia who has supportive comments.</p>
+    </ack>
+    <ref-list>
+      <title>References</title>
+      <ref id="pone.0320426.ref001">
+        <label>1</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Sumardilah</surname>
+            <given-names>DS</given-names>
+          </name>. <article-title>Analisis
+            Sisa Makanan Pasien Rawat Inap Rumah Sakit (Food Leftovers Analysis of Hospital
+          Inpatients</article-title>
+                    <source>). Jurnal Kesehatan</source>. <year>2022</year> ; <volume>
+          13</volume>( <issue>1</issue>): <fpage>101</fpage>– <lpage>9</lpage>. </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref002">
+        <label>2</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Simzari K, Vahabzadeh
+          D, Saeidlou S, Khoshbin S, Bektas Y. Food intake plate waste and its association
+          with malnutrition in hospitalized patients. 2017.
+
+
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref003">
+        <label>3</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Zhang</surname>
+            <given-names>Y</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Hou</surname>
+            <given-names>F</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Cheng</surname>
+            <given-names>J</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Chen</surname>
+            <given-names>G</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Wang</surname>
+            <given-names>L</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Jiang</surname>
+            <given-names>X</given-names>
+          </name>, <etal>et al</etal>. <article-title>The
+          association between leftover food consumption and depression among older adults:
+            Findings from a cross-sectional study</article-title>. <source>J Affect Disord</source>
+          . <year>
+            2022</year>; <volume>307</volume>: <fpage>157</fpage>– <lpage>62</lpage>. <comment> doi: <ext-link
+              ext-link-type="uri"
+              xlink:href="https://doi.org/10.1016/j.jad.2022.03.074"
+              xlink:type="simple">10.1016/j.jad.2022.03.074</ext-link>
+          </comment>
+                    <object-id
+            pub-id-type="pmid">35390351</object-id>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref004">
+        <label>4</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Mustafa</surname>
+            <given-names>AW</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Amra</surname>
+            <given-names>N</given-names>
+          </name>. <article-title>Overview
+            of usual food leftovers in inpatients at the Jailolo regional general hospital,
+            West Halmahera Regency</article-title>. <source>Int J Sci Res Manag</source>. <year>
+            2021</year>; <volume>09</volume>:( <issue>12</issue>): <fpage>08</fpage>– <lpage>
+            12</lpage>. <comment>doi: <ext-link ext-link-type="uri"
+              xlink:href="https://doi.org/10.18535/ijsrm/v9i12.nd2"
+              xlink:type="simple">10.18535/ijsrm/v9i12.nd2</ext-link>
+          </comment>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref005">
+        <label>5</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Collins</surname>
+            <given-names>J</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Porter</surname>
+            <given-names>J</given-names>
+          </name>. <article-title>Quantifying
+            waste and its costs in hospital foodservices</article-title>. <source>Nutr Diet</source>
+          . <year>
+            2023</year>; <volume>80</volume>( <issue>2</issue>): <fpage>192</fpage>– <lpage>
+            200</lpage>. <comment>doi: <ext-link ext-link-type="uri"
+              xlink:href="https://doi.org/10.1111/1747-0080.12796" xlink:type="simple">
+          10.1111/1747-0080.12796</ext-link>
+          </comment>
+                    <object-id
+            pub-id-type="pmid">36690908</object-id>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref006">
+        <label>6</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Fadilla</surname>
+            <given-names>C</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Rachmah</surname>
+            <given-names>Q</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Juwariyah</surname>
+            <given-names>J</given-names>
+          </name>. <article-title>Description
+            of Food Leftovers for Inpatient Hospitals in Sidoarjo District Hospital.
+            (Gambaran Sisa Makanan Pasien Rawat Inap RSUD Kabupaten Sidoarjo</article-title>
+                    <source>).
+          Amerta Nutrit</source>. <year>2020</year>; <volume>4</volume>( <issue>3</issue> ): <fpage>
+          198</fpage>. </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref007">
+        <label>7</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Setianto</surname>
+            <given-names>B</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Adriansyah</surname>
+            <given-names>AA</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Hanik</surname>
+            <given-names>U</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Bistara</surname>
+            <given-names>DN</given-names>
+          </name>. <article-title>The
+            Correlation Between Patient Satisfaction Regarding Nutrition Service And
+            Hospital Length Of Stay With Food Waste In Covid–19 Patients</article-title> . <source>
+          JHS</source>. <year>2021</year>; <volume>14</volume>( <issue>02</issue>): <fpage>
+            147</fpage>– <lpage>52</lpage>. <comment>doi: <ext-link ext-link-type="uri"
+              xlink:href="https://doi.org/10.33086/jhs.v14i02.2045"
+              xlink:type="simple">10.33086/jhs.v14i02.2045</ext-link>
+          </comment>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref008">
+        <label>8</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Pramandari</surname>
+            <given-names>HW</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Astawan</surname>
+            <given-names>M</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Palupi</surname>
+            <given-names>NS</given-names>
+          </name>, <etal>et al</etal> . <article-title>The
+          role of cook-chill and cook-freeze methods as indicators of quality of
+            nutrition
+            services in hospital</article-title>. <source>J Med Health Stud</source>. <year>
+            2023</year>; <volume>4</volume>( <issue>2</issue>): <fpage>86</fpage>– <lpage>
+            100</lpage>. </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref009">
+        <label>9</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Wirasamadi</surname>
+            <given-names>NLP</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Adhi</surname>
+            <given-names>KT</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Weta</surname>
+            <given-names>IW</given-names>
+          </name>. <article-title>Analysis
+            of inpatients food leftover at Sanglah hospital Bali province</article-title>. <source>Publ
+          Health Prevent Med Archiv</source>. <year>2015</year>; <volume>3</volume>( <issue>
+            1</issue>): <fpage>72</fpage>– <lpage>7</lpage>. </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref010">
+        <label>10</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Parent</surname>
+            <given-names>M</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Niezgoda</surname>
+            <given-names>H</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Keller</surname>
+            <given-names>HH</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Chambers</surname>
+            <given-names>LW</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Daly</surname>
+            <given-names>S</given-names>
+          </name>. <article-title>Comparison
+            of visual estimation methods for regular and modified textures: real-time vs
+            digital imaging</article-title>. <source>J Acad Nutr Diet</source>. <year>2012</year> ; <volume>
+          112</volume>( <issue>10</issue>): <fpage>1636</fpage>– <lpage>41</lpage>. <comment> doi: <ext-link
+              ext-link-type="uri"
+              xlink:href="https://doi.org/10.1016/j.jand.2012.06.367"
+              xlink:type="simple">10.1016/j.jand.2012.06.367</ext-link>
+          </comment>
+                    <object-id
+            pub-id-type="pmid">23017574</object-id>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref011">
+        <label>11</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Tagi</surname>
+            <given-names>M</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Tajiri</surname>
+            <given-names>M</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Hamada</surname>
+            <given-names>Y</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Wakata</surname>
+            <given-names>Y</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Shan</surname>
+            <given-names>X</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Ozaki</surname>
+            <given-names>K</given-names>
+          </name>, <etal>et al</etal>. <article-title>Accuracy
+          of an Artificial Intelligence-Based Model for Estimating Leftover Liquid Food in
+            Hospitals: Validation Study</article-title>. <source>JMIR Form Res</source>. <year>
+            2022</year>; <volume>6</volume>( <issue>5</issue>):e35991. <comment>doi: <ext-link
+              ext-link-type="uri" xlink:href="https://doi.org/10.2196/35991"
+              xlink:type="simple">10.2196/35991</ext-link>
+          </comment>
+                    <object-id
+            pub-id-type="pmid">35536638</object-id>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref012">
+        <label>12</label>
+        <mixed-citation publication-type="conf" xlink:type="simple">
+          <name name-style="western">
+            <surname>Sari</surname>
+            <given-names>Y</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Adinugroho</surname>
+            <given-names>S</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Maligan</surname>
+            <given-names>J</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Candra</surname>
+            <given-names>E</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Utaminingrum</surname>
+            <given-names>F</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Nur’Aini</surname>
+            <given-names>N</given-names>
+          </name>. <conf-name>Leftovers
+            food recognition using deep neural network and regression approach for objective
+            visual analysis estimation</conf-name>. In: <conf-name>2021 4th International
+            Conference of Computer and Informatics Engineering (IC2IE)</conf-name>. <publisher-name>
+          IEEE</publisher-name>. <year>2021</year>. <fpage>24</fpage>– <lpage>9</lpage>. </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref013">
+        <label>13</label>
+        <mixed-citation publication-type="conf" xlink:type="simple">
+          <name name-style="western">
+            <surname>Sari</surname>
+            <given-names>Y</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Maligan</surname>
+            <given-names>J</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Prakoso</surname>
+            <given-names>A</given-names>
+          </name>. <conf-name>Improving
+            the elementary leftover food estimation algorithm by using clustering image
+            segmentation in nutrition intake problem</conf-name>. In: <conf-name>2020
+            International Conference on Computer Engineering, Network, and Intelligent
+            Multimedia (CENIM)</conf-name>. <publisher-name>IEEE</publisher-name>. <year>
+            2020</year>. <fpage>435</fpage>– <lpage>9</lpage>. </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref014">
+        <label>14</label>
+        <mixed-citation publication-type="conf" xlink:type="simple">
+          <name name-style="western">
+            <surname>Sari</surname>
+            <given-names>YA</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Saputra</surname>
+            <given-names>VW</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Agustina</surname>
+            <given-names>A</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Wani</surname>
+            <given-names>YA</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Bihanda</surname>
+            <given-names>YG</given-names>
+          </name>. <conf-name>Comparison
+            of image thresholding and clustering segmentation methods for understanding
+            nutritional content of food images</conf-name>. In: <conf-name>Proceedings of
+            the 5th International Conference on Sustainable Information Engineering and
+            Technology</conf-name>. <publisher-name>ACM</publisher-name>. <year>2020</year>. <fpage>
+          124</fpage>– <lpage>9</lpage>. <comment>doi: <ext-link ext-link-type="uri"
+              xlink:href="https://doi.org/10.1145/3427423.3427441" xlink:type="simple">
+          10.1145/3427423.3427441</ext-link>
+          </comment>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref015">
+        <label>15</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Mansouri</surname>
+            <given-names>M</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Benabdellah Chaouni</surname>
+            <given-names>S</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Jai Andaloussi</surname>
+            <given-names>S</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Ouchetto</surname>
+            <given-names>O</given-names>
+          </name>. <article-title>Deep
+            Learning for Food Image Recognition and Nutrition Analysis Towards Chronic
+            Diseases Monitoring: A Systematic Review</article-title>. <source>SN Comput Sci</source>
+          . <year>
+            2023</year>; <volume>4</volume>( <issue>5</issue>). <comment>doi: <ext-link
+              ext-link-type="uri"
+              xlink:href="https://doi.org/10.1007/s42979-023-01972-1"
+              xlink:type="simple">10.1007/s42979-023-01972-1</ext-link>
+          </comment>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref016">
+        <label>16</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Simonyan K. Very deep
+          convolutional networks for large-scale image recognition. arXiv preprint. <year>
+            2014</year>. <ext-link ext-link-type="uri"
+            xlink:href="https://arxiv.org/abs/1409.1556" xlink:type="simple">
+          https://arxiv.org/abs/1409.1556</ext-link>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref017">
+        <label>17</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>He</surname>
+            <given-names>K</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Zhang</surname>
+            <given-names>X</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Ren</surname>
+            <given-names>S</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Sun</surname>
+            <given-names>J</given-names>
+          </name>. <article-title>Deep
+            residual learning for image recognition. In: Proceedings of the IEEE Conference
+            on Computer Vision and</article-title>
+                    <source>Pattern Recognition</source>; <year>
+            2016</year>. p. <fpage>770</fpage>– <lpage>8</lpage>. </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref018">
+        <label>18</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Iqbal</surname>
+            <given-names>S</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Qureshi</surname>
+            <given-names>AN</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Li</surname>
+            <given-names>J</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Choudhry</surname>
+            <given-names>IA</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Mahmood</surname>
+            <given-names>T</given-names>
+          </name>. <article-title>Dynamic
+            learning for imbalanced data in learning chest X-ray and CT images</article-title> . <source>
+          Heliyon</source>. <year>2023</year>; <volume>9</volume>( <issue>6</issue> ):e16807. <comment>
+          doi: <ext-link
+              ext-link-type="uri"
+              xlink:href="https://doi.org/10.1016/j.heliyon.2023.e16807"
+              xlink:type="simple">10.1016/j.heliyon.2023.e16807</ext-link>
+          </comment>
+                    <object-id
+            pub-id-type="pmid">37313141</object-id>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref019">
+        <label>19</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Aizawa</surname>
+            <given-names>K</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Maruyama</surname>
+            <given-names>Y</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Li</surname>
+            <given-names>H</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Morikawa</surname>
+            <given-names>C</given-names>
+          </name>. <article-title>Food
+            Balance Estimation by Using Personal Dietary Tendencies in a Multimedia Food Log</article-title>
+          . <source>IEEE
+            Trans Multimedia</source>. <year>2013</year>; <volume>15</volume>( <issue>8</issue> ): <fpage>
+          2176</fpage>– <lpage>85</lpage>. <comment>doi: <ext-link ext-link-type="uri"
+              xlink:href="https://doi.org/10.1109/tmm.2013.2271474"
+              xlink:type="simple">10.1109/tmm.2013.2271474</ext-link>
+          </comment>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref020">
+        <label>20</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Aizawa</surname>
+            <given-names>K</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Maeda</surname>
+            <given-names>K</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Ogawa</surname>
+            <given-names>M</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Sato</surname>
+            <given-names>Y</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Kasamatsu</surname>
+            <given-names>M</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Waki</surname>
+            <given-names>K</given-names>
+          </name>, <etal>et al</etal>. <article-title>Comparative
+          Study of the Routine Daily Usability of FoodLog: A Smartphone-based Food
+            Recording Tool Assisted by Image Retrieval</article-title>. <source>J Diabetes
+            Sci Technol</source>. <year>2014</year>; <volume>8</volume>( <issue>2</issue>): <fpage>
+          203</fpage>– <lpage>8</lpage>. <comment>doi: <ext-link ext-link-type="uri"
+              xlink:href="https://doi.org/10.1177/1932296814522745"
+              xlink:type="simple">10.1177/1932296814522745</ext-link>
+          </comment>
+                    <object-id
+            pub-id-type="pmid">24876568</object-id>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref021">
+        <label>21</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Kitamura K, de Silva C,
+          Yamasaki T, Aizawa K. <source>Image processing based approach to food balance
+            analysis for personal food logging</source>. <year>2010</year>. p. <fpage>625</fpage> – <lpage>
+          30</lpage>. </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref022">
+        <label>22</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Amato G, Bolettieri P, Monteiro
+          de Lira V, Muntean CI, Perego R, Renso C. <source>Social media image
+            recognition for food trend analysis. In: Proceedings of the 40th International
+            ACM SIGIR Conference on Research and Development in Information Retrieval</source> . <year>
+          2017</year>. p. <fpage>1333</fpage>– <lpage>6</lpage>. <comment>doi: <ext-link
+              ext-link-type="uri" xlink:href="https://doi.org/10.1145/3077136.3084142"
+              xlink:type="simple">10.1145/3077136.3084142</ext-link>
+          </comment>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref023">
+        <label>23</label>
+        <mixed-citation publication-type="other" xlink:type="simple">He Y, Xu C, Khanna N, Boushey
+          CJ, Delp EJ. <source>Food image analysis: segmentation, identification
+            and weight estimation. In: 2013 IEEE International Conference on Multimedia and
+            Expo (ICME</source>). <year>2013</year>. p. <fpage>1</fpage>– <lpage>6</lpage>. <comment>
+          doi: <ext-link
+              ext-link-type="uri"
+              xlink:href="https://doi.org/10.1109/ICME.2013.6607548"
+              xlink:type="simple">10.1109/ICME.2013.6607548</ext-link>
+          </comment>
+                    <object-id
+            pub-id-type="pmid">28572873</object-id>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref024">
+        <label>24</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Kitamura K, Yamasaki T, Aizawa
+          K. <source>Food log by analyzing food images. In: Proceedings of the 16th
+            ACM international conference on Multimedia</source>. <year>2008</year>. p. <fpage>
+            999</fpage>– <lpage>1000</lpage>. <comment>doi: <ext-link ext-link-type="uri"
+              xlink:href="https://doi.org/10.1145/1459359.1459548" xlink:type="simple">
+          10.1145/1459359.1459548</ext-link>
+          </comment>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref025">
+        <label>25</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Kitamura K, Yamasaki T, Aizawa
+          K. <source>Foodlog: Capture, analysis and retrieval of personal food
+            images via web. In: Proceedings of the ACM multimedia 2009 Workshop on
+            Multimedia for Cooking and Eating Activities</source>; <year>2009</year>. p. <fpage>
+            23</fpage>– <lpage>30</lpage>. </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref026">
+        <label>26</label>
+        <mixed-citation publication-type="other" xlink:type="simple">Sari YA, Dewi RK, Maligan JM,
+          Ananta AS, Adinugroho S. <source>Automatic food leftover estimation
+            in tray box using image segmentation. In: 2019 International Conference on
+            Sustainable Information Engineering and Technology (SIET)</source>. <year>2019</year>.
+          p. <fpage>212</fpage>– <lpage>6</lpage>. </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref027">
+        <label>27</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Adinugroho</surname>
+            <given-names>S</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Sari</surname>
+            <given-names>YA</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Maligan</surname>
+            <given-names>JM</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Sari</surname>
+            <given-names>K</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Bihanda</surname>
+            <given-names>YG</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Nuraini</surname>
+            <given-names>N</given-names>
+          </name>, <etal>et al</etal>. <article-title>Nutrition
+          estimation of leftover using improved food image segmentation and contour based
+            calculation algorithm</article-title>. <source>J Environ Eng Sustain Technol</source> . <year>
+          2022</year>; <volume>9</volume>( <issue>01</issue>): <fpage>30</fpage>– <lpage>
+            40</lpage>. <comment>doi: <ext-link ext-link-type="uri"
+              xlink:href="https://doi.org/10.21776/ub.jeest.2022.009.01.5"
+              xlink:type="simple">10.21776/ub.jeest.2022.009.01.5</ext-link>
+          </comment>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref028">
+        <label>28</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Lubura</surname>
+            <given-names>J</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Pezo</surname>
+            <given-names>L</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Sandu</surname>
+            <given-names>MA</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Voronova</surname>
+            <given-names>V</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Donsì</surname>
+            <given-names>F</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Šic Žlabur</surname>
+            <given-names>J</given-names>
+          </name>, <etal>et al</etal>. <article-title>Food
+          Recognition and Food Waste Estimation Using Convolutional Neural Network</article-title> . <source>
+          Electronics</source>. <year>2022</year>; <volume>11</volume>( <issue>22</issue> ): <fpage>
+          3746</fpage>. <comment>doi: <ext-link ext-link-type="uri"
+              xlink:href="https://doi.org/10.3390/electronics11223746"
+              xlink:type="simple">10.3390/electronics11223746</ext-link>
+          </comment>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref029">
+        <label>29</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Kim</surname>
+            <given-names>J</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Lee</surname>
+            <given-names>D</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Kwon</surname>
+            <given-names>S</given-names>
+          </name>. <article-title>Food
+            Classification and Meal Intake Amount Estimation through Deep Learning</article-title> . <source>Applied
+          Sciences</source>. <year>2023</year>; <volume>13</volume>( <issue>9</issue> ): <fpage>
+            5742</fpage>. <comment>doi: <ext-link ext-link-type="uri"
+              xlink:href="https://doi.org/10.3390/app13095742" xlink:type="simple">
+          10.3390/app13095742</ext-link>
+          </comment>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref030">
+        <label>30</label>
+        <mixed-citation publication-type="journal" xlink:type="simple">
+          <name name-style="western">
+            <surname>Van Wymelbeke-Delannoy</surname>
+            <given-names>V</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Juhel</surname>
+            <given-names>C</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Bole</surname>
+            <given-names>H</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Sow</surname>
+            <given-names>A-K</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Guyot</surname>
+            <given-names>C</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Belbaghdadi</surname>
+            <given-names>F</given-names>
+          </name>, <etal>et al</etal>. <article-title>A
+          Cross-Sectional Reproducibility Study of a Standard Camera Sensor Using
+            Artificial Intelligence to Assess Food Items: The FoodIntech Project</article-title> . <source>
+          Nutrients</source>. <year>2022</year>; <volume>14</volume>( <issue>1</issue> ): <fpage>
+            221</fpage>. <comment>doi: <ext-link ext-link-type="uri"
+              xlink:href="https://doi.org/10.3390/nu14010221" xlink:type="simple">
+              10.3390/nu14010221</ext-link>
+          </comment>
+                    <object-id
+            pub-id-type="pmid">35011096</object-id>
+        </mixed-citation>
+      </ref>
+      <ref id="pone.0320426.ref031">
+        <label>31</label>
+        <mixed-citation publication-type="conf" xlink:type="simple">
+          <name name-style="western">
+            <surname>Selvaraju</surname>
+            <given-names>R</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Cogswell</surname>
+            <given-names>M</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Das</surname>
+            <given-names>A</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Vedantam</surname>
+            <given-names>R</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Parikh</surname>
+            <given-names>D</given-names>
+          </name>, <name
+            name-style="western">
+            <surname>Batra</surname>
+            <given-names>D</given-names>
+          </name>. <article-title>Grad-CAM:
+            visual explanations from deep networks via gradient-based localization.</article-title>
+                    <conf-name>In:
+          Proceedings of the IEEE International Conference on Computer Vision</conf-name>; <year>
+          2017</year>. p. <fpage>618</fpage>– <lpage>26</lpage>. </mixed-citation>
+      </ref>
+    </ref-list>
+  </back>
+</article>

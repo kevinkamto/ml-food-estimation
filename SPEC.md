@@ -226,27 +226,30 @@ this pipeline to produce compatible inputs.
 
 ### 6.2 Algorithm
 
-**Stage 1 -- Plate boundary detection**
+**Stage 1 -- Plate boundary detection (SAM ViT-B)**
 1. Pad raw image (shorter dimension) to square with black pixels
 2. Resize to 800x800
-3. Run OpenCV GrabCut with center-biased rect (10% inset): plate always fills the central ~80%
-4. Morphological closing (30px kernel) to fill gaps in the GrabCut mask
-5. Find the largest contour; compute its convex hull
-6. Fill the convex hull to produce a binary plate mask
+3. Run SAM ViT-B with explicit point prompts:
+   - Foreground point: center of frame (plate is always centered, fixed hospital camera)
+   - Background points: four corners at 10% inset (always the checkered mat)
+4. Select the highest-scoring mask from SAM's three candidates
+5. Morphological closing (30px kernel) to fill small gaps in the mask
 
-**Stage 2 -- Plate normalization**
-7. Within the hull, classify each pixel by HSV:
-   - Plate surface: S < 40 AND V > 150 (low saturation, high brightness) -> (255, 255, 255)
-   - Food: all other pixels inside the hull -> original RGB preserved
-8. Outside the hull -> (0, 0, 0)
+**Stage 2 -- Plate normalization (HSV + local texture)**
+6. Within the SAM mask, classify each pixel using HSV and local texture std (7x7 window):
+   - Plate surface: S < 40 AND V > 150 AND texture_std < 12 -> (255, 255, 255)
+   - Food: all other pixels inside the mask -> original RGB preserved
+7. Outside the mask -> (0, 0, 0)
+
+The texture criterion prevents white/cream foods (rice, porridge) from being painted white:
+smooth plate surface has local std ~3-8; rice grain boundaries have local std ~10-20.
 
 ### 6.3 Dish Shape Handling
 
-Two dish shapes exist in the dataset:
-- **Round circular plate** (most categories): convex hull approximates a circle/ellipse
-- **Large rounded-rectangle plate** (cat 007, some cat 033): convex hull approximates a squircle
-
-Convex hull is shape-agnostic and handles both without geometric assumptions.
+SAM with point prompts is shape-agnostic: it detects the plate boundary directly from the
+image content without any geometric assumption. Both dish types in the dataset are handled:
+- **Round circular plate** (most categories)
+- **Large rounded-rectangle plate** (cat 007, some cat 033)
 
 ### 6.4 CLI Usage
 
@@ -261,9 +264,9 @@ python src/segmentation.py --input_dir data/raw/data_before --output_dir data/se
 
 ### 6.5 Known Limitations
 
-- Center-rect GrabCut assumes the dish occupies the central ~80% of the frame. Only valid for the fixed hospital cafeteria camera setup; images from a different angle may require rect adjustment.
-- White/cream foods (rice, rice porridge, white tofu) have HSV close to the plate surface and may be partially normalized to white. This is the documented hard case from the paper.
-- Convex hull slightly over-fills concave corners on rounded-rectangle plates -- acceptable for consumption ratio estimation.
+- SAM assumes the dish occupies the center of the frame. Only valid for the fixed hospital cafeteria camera setup; images from a different angle may require different prompts.
+- White/cream foods (rice, rice porridge, white tofu) with very smooth texture may still be partially normalized to white if their local texture std falls below the threshold of 12. This is the documented hard case from the paper.
+- SAM checkpoint (~375 MB, ViT-B) is downloaded automatically to `~/.cache/segment_anything/` on first use. Subsequent runs use the cached file. On Google Colab, this cache does not persist between sessions -- add the download step to the Colab setup cell.
 
 ---
 

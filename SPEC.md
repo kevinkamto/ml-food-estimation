@@ -224,12 +224,12 @@ def predict(before_path, after_path, checkpoint_path):
 | File                                      | Description                            | Status         |
 | ----------------------------------------- | -------------------------------------- | -------------- |
 | `notebooks/EDA_LeFoodSet_Leftovers.ipynb` | Exploratory data analysis              | Exists         |
-| `notebooks/training.ipynb`                | Full training pipeline (local + Colab) | To build       |
-| `notebooks/inference.ipynb`               | Demo: load image pair and predict      | To build       |
-| `src/dataset.py`                          | Dataset and transforms                 | To build       |
-| `src/model.py`                            | Dual-stream model definition           | To build       |
-| `src/train.py`                            | Training loop with k-fold              | To build       |
-| `src/utils.py`                            | Metrics, helpers, seed fixing          | To build       |
+| `notebooks/training.ipynb`                | Full training pipeline (local + Colab) | Exists         |
+| `notebooks/inference.ipynb`               | Demo: load image pair and predict      | Exists         |
+| `src/dataset.py`                          | Dataset and transforms                 | Exists         |
+| `src/model.py`                            | Dual-stream model definition           | Exists         |
+| `src/train.py`                            | Training loop with k-fold              | Exists         |
+| `src/utils.py`                            | Metrics, helpers, seed fixing          | Exists         |
 | `checkpoints/`                            | Saved model weights per fold           | Auto-generated |
 | `results/summary.json`                    | Final metrics across all folds         | Auto-generated |
 | `pyproject.toml`                          | uv project config and dependencies     | Exists         |

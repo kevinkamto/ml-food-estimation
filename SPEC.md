@@ -211,7 +211,63 @@ After all folds:
 
 ---
 
-## 6. Inference Pipeline (`src/inference.py` + `notebooks/LeFoodSet_Leftovers_Inference.ipynb`)
+## 6. Segmentation Pipeline (`src/segmentation.py`)
+
+Converts a raw food photo into the ground-truth segmented format required by the model.
+
+### 6.1 Output Format
+
+```
+black background (outside plate) | pure white plate area | food at original colors
+```
+
+The model was trained on images in this exact format. Inference on raw images must go through
+this pipeline to produce compatible inputs.
+
+### 6.2 Algorithm
+
+**Stage 1 -- Plate boundary detection**
+1. Pad raw image (shorter dimension) to square with black pixels
+2. Resize to 800x800
+3. Run OpenCV GrabCut with center-biased rect (10% inset): plate always fills the central ~80%
+4. Morphological closing (30px kernel) to fill gaps in the GrabCut mask
+5. Find the largest contour; compute its convex hull
+6. Fill the convex hull to produce a binary plate mask
+
+**Stage 2 -- Plate normalization**
+7. Within the hull, classify each pixel by HSV:
+   - Plate surface: S < 40 AND V > 150 (low saturation, high brightness) -> (255, 255, 255)
+   - Food: all other pixels inside the hull -> original RGB preserved
+8. Outside the hull -> (0, 0, 0)
+
+### 6.3 Dish Shape Handling
+
+Two dish shapes exist in the dataset:
+- **Round circular plate** (most categories): convex hull approximates a circle/ellipse
+- **Large rounded-rectangle plate** (cat 007, some cat 033): convex hull approximates a squircle
+
+Convex hull is shape-agnostic and handles both without geometric assumptions.
+
+### 6.4 CLI Usage
+
+```bash
+# Single image
+python src/segmentation.py --input data/raw/data_before/001/001_001_DSC_0059_bef.JPG \
+    --output results/seg_test.jpg
+
+# Batch (walks subdirectories, writes flat into output_dir)
+python src/segmentation.py --input_dir data/raw/data_before --output_dir data/segmented/data_before
+```
+
+### 6.5 Known Limitations
+
+- Center-rect GrabCut assumes the dish occupies the central ~80% of the frame. Only valid for the fixed hospital cafeteria camera setup; images from a different angle may require rect adjustment.
+- White/cream foods (rice, rice porridge, white tofu) have HSV close to the plate surface and may be partially normalized to white. This is the documented hard case from the paper.
+- Convex hull slightly over-fills concave corners on rounded-rectangle plates -- acceptable for consumption ratio estimation.
+
+---
+
+## 7. Inference Pipeline (`src/inference.py` + `notebooks/LeFoodSet_Leftovers_Inference.ipynb`)
 
 ### 6.1 Single Prediction
 
@@ -244,7 +300,8 @@ def predict(before_path, after_path, checkpoint_path, weight_before_g=None):
 | `src/model.py`                                   | Dual-stream model definition           | Exists         |
 | `src/train.py`                                   | Training loop with GroupKFold          | Exists         |
 | `src/utils.py`                                   | Metrics, helpers, seed fixing          | Exists         |
-| `src/inference.py`                               | CLI inference script                   | Exists         |
+| `src/inference.py`                               | CLI inference script (+ --raw flag)    | Exists         |
+| `src/segmentation.py`                            | Auto-segmentation: raw -> 800x800      | Exists         |
 | `checkpoints/`                                   | Saved model weights per fold           | Auto-generated |
 | `results/summary.json`                           | Final metrics across all folds         | Auto-generated |
 | `results/all_folds_log.csv`                      | Combined per-epoch training log        | Auto-generated |

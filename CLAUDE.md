@@ -140,8 +140,20 @@ pip install -r requirements.txt
 # Run training (set working directory to project root first)
 python src/train.py --folds 5 --epochs 100 --lr 0.0001 --batch_size 16
 
-# Run inference on a single pair
-python src/inference.py --before path/to/before.jpg --after path/to/after.jpg --checkpoint checkpoints/best_fold_1.pth
+# Segment a single raw image (produces 800x800: black background, white plate, food as-is)
+python src/segmentation.py --input data/raw/data_before/001/001_001_DSC_0059_bef.JPG --output results/seg_test.jpg
+
+# Batch-segment all raw images in a directory
+python src/segmentation.py --input_dir data/raw/data_before --output_dir data/segmented/data_before
+
+# Run inference on pre-segmented images
+python src/inference.py --before path/to/before_seg.jpg --after path/to/after_seg.jpg --checkpoint checkpoints/fold_1_best.pth
+
+# Run inference directly on raw images (auto-segments before predicting)
+python src/inference.py --before path/to/raw_before.jpg --after path/to/raw_after.jpg --checkpoint checkpoints/fold_1_best.pth --raw
+
+# Save auto-segmented images for inspection during --raw inference
+python src/inference.py --before raw_before.jpg --after raw_after.jpg --checkpoint checkpoints/fold_1_best.pth --raw --output_seg results/seg_preview/
 ```
 
 ---

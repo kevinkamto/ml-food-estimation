@@ -69,9 +69,7 @@ def ensemble_predict(
     weight_before_g: float | None = None,
 ) -> dict:
     """Average predictions across all checkpoint paths."""
-    ratios = [
-        predict(before_path, after_path, cp)["consumption_ratio"] for cp in checkpoint_paths
-    ]
+    ratios = [predict(before_path, after_path, cp)["consumption_ratio"] for cp in checkpoint_paths]
     r_mean = float(np.mean(ratios))
     r_std = float(np.std(ratios))
     result: dict = {

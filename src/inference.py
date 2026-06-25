@@ -3,6 +3,7 @@ import sys
 import argparse
 
 import torch
+from loguru import logger
 from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -53,7 +54,7 @@ def main():
 
     result = predict(args.before, args.after, args.checkpoint)
     for k, v in result.items():
-        print(f"{k}: {v}")
+        logger.info(f"{k}: {v}")
 
 
 if __name__ == '__main__':

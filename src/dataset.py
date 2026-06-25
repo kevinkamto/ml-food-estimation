@@ -6,6 +6,7 @@ import random as _random
 import numpy as np
 import pandas as pd
 import torch
+from loguru import logger
 from torch.utils.data import Dataset
 from torchvision import transforms
 from PIL import Image
@@ -27,7 +28,7 @@ def load_metadata(xlsx_path, before_dir, after_dir, save_dir='.'):
     )
     n_dropped = (~mask).sum()
     if n_dropped > 0:
-        print(f"Skipping {n_dropped} samples with missing segmented images ({mask.sum()} usable).")
+        logger.info(f"Skipped {n_dropped} samples with missing segmented images ({mask.sum()} usable).")
     df = df[mask].reset_index(drop=True)
 
     max_weight = float(df['Weight Before Eaten (g)'].max())

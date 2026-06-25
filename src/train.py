@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
+from loguru import logger
 from torch.utils.data import DataLoader
 from sklearn.model_selection import StratifiedKFold
 
@@ -75,10 +76,12 @@ def train_fold(model, train_loader, val_loader, optimizer, device,
         val_rmse = compute_rmse(val_preds, val_targets)
         val_acc = float((val_cat_preds == val_cat_targets).float().mean())
 
-        print(f"Fold {fold_n} | Epoch {epoch:3d} | "
-              f"Train Loss: {np.mean(train_losses):.4f} | "
-              f"Val Loss: {np.mean(val_losses):.4f} | "
-              f"Val MAE: {val_mae:.4f} | Val Acc: {val_acc:.4f}")
+        logger.info(
+            f"Fold {fold_n} | Epoch {epoch:3d} | "
+            f"Train Loss: {np.mean(train_losses):.4f} | "
+            f"Val Loss: {np.mean(val_losses):.4f} | "
+            f"Val MAE: {val_mae:.4f} | Val Acc: {val_acc:.4f}"
+        )
 
         log_rows.append({
             'epoch': epoch,
@@ -105,7 +108,7 @@ def train_fold(model, train_loader, val_loader, optimizer, device,
         else:
             epochs_no_improve += 1
             if epochs_no_improve >= patience:
-                print(f"Early stopping at epoch {epoch} (no improvement for {patience} epochs)")
+                logger.info(f"Early stopping at epoch {epoch} (no improvement for {patience} epochs)")
                 break
 
     return best_val_mae, pd.DataFrame(log_rows)
@@ -125,7 +128,7 @@ def main():
     set_seed(args.seed)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f"Device: {device}")
+    logger.info(f"Device: {device}")
 
     data_dir = 'data'
     before_dir = os.path.join(data_dir, 'segmented', 'data_before')
@@ -151,9 +154,9 @@ def main():
     fold_maes = []
 
     for fold_n, (trainval_idx, test_idx) in enumerate(skf.split(np.arange(len(df)), labels), start=1):
-        print(f"\n{'='*60}")
-        print(f"Fold {fold_n}/{args.folds}")
-        print(f"{'='*60}")
+        logger.info(f"{'='*60}")
+        logger.info(f"Fold {fold_n}/{args.folds}")
+        logger.info(f"{'='*60}")
 
         set_seed(args.seed + fold_n)
 
@@ -187,7 +190,7 @@ def main():
         )
         fold_maes.append(best_mae)
         log_df.to_csv(os.path.join(results_dir, f'fold_{fold_n}_log.csv'), index=False)
-        print(f"Fold {fold_n} best val MAE: {best_mae:.4f}")
+        logger.info(f"Fold {fold_n} best val MAE: {best_mae:.4f}")
 
     with open(os.path.join(results_dir, 'fold_indices.json'), 'w') as f:
         json.dump(fold_indices, f, indent=2)
@@ -202,8 +205,8 @@ def main():
     with open(os.path.join(results_dir, 'summary.json'), 'w') as f:
         json.dump(summary, f, indent=2)
 
-    print(f"\nFinal Mean MAE: {summary['mean_mae']:.4f} +/- {summary['std_mae']:.4f}")
-    print(f"Beats human baseline (0.0926): {summary['beats_baseline']}")
+    logger.info(f"Final Mean MAE: {summary['mean_mae']:.4f} +/- {summary['std_mae']:.4f}")
+    logger.info(f"Beats human baseline (0.0926): {summary['beats_baseline']}")
 
 
 if __name__ == '__main__':

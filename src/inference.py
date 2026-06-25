@@ -1,6 +1,7 @@
 import argparse
 import os
 import sys
+import tempfile
 
 import numpy as np
 import torch
@@ -10,6 +11,7 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dataset import _pixel_area, get_transforms
 from model import DualStreamEfficientNet
+from segmentation import segment_image
 
 
 def _compute_area_ratio(before_path: str, after_path: str) -> float:
@@ -105,8 +107,8 @@ def ensemble_predict(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run inference on a before/after image pair")
-    parser.add_argument("--before", required=True, help="Path to segmented before image")
-    parser.add_argument("--after", required=True, help="Path to segmented after image")
+    parser.add_argument("--before", required=True, help="Path to before image")
+    parser.add_argument("--after", required=True, help="Path to after image")
     parser.add_argument("--checkpoint", required=True, help="Path to .pth checkpoint file")
     parser.add_argument(
         "--weight_before",
@@ -114,9 +116,47 @@ def main() -> None:
         default=None,
         help="Known serving weight in grams (optional; enables gram output)",
     )
+    parser.add_argument(
+        "--raw",
+        action="store_true",
+        help="Treat --before/--after as raw (unsegmented) images and auto-segment first",
+    )
+    parser.add_argument(
+        "--output_seg",
+        default=None,
+        metavar="DIR",
+        help="If --raw, save the auto-segmented images to this directory for inspection",
+    )
     args = parser.parse_args()
 
-    result = predict(args.before, args.after, args.checkpoint, args.weight_before)
+    before_path = args.before
+    after_path = args.after
+
+    if args.raw:
+        tmp_ctx = tempfile.TemporaryDirectory()
+        tmp_dir = tmp_ctx.name if args.output_seg is None else args.output_seg
+        if args.output_seg:
+            os.makedirs(args.output_seg, exist_ok=True)
+            tmp_ctx = None  # type: ignore[assignment]
+
+        before_name = os.path.splitext(os.path.basename(args.before))[0] + "_seg.jpg"
+        after_name = os.path.splitext(os.path.basename(args.after))[0] + "_seg.jpg"
+        before_path = os.path.join(tmp_dir, before_name)
+        after_path = os.path.join(tmp_dir, after_name)
+
+        logger.info("Segmenting before image ...")
+        segment_image(args.before, before_path)
+        logger.info("Segmenting after image ...")
+        segment_image(args.after, after_path)
+        if args.output_seg:
+            logger.info(f"Segmented images saved to {args.output_seg}")
+
+    try:
+        result = predict(before_path, after_path, args.checkpoint, args.weight_before)
+    finally:
+        if args.raw and tmp_ctx is not None:
+            tmp_ctx.cleanup()
+
     for k, v in result.items():
         logger.info(f"{k}: {v}")
 

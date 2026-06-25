@@ -34,6 +34,13 @@ def load_metadata(xlsx_path, save_dir='.'):
     return df, norm_params, le
 
 
+def _seg_filename(raw_filename):
+    # Segmented files are named {category}_{raw_filename}, e.g.
+    # raw: 001_001_DSC_0059_bef.JPG -> segmented: 001_001_001_DSC_0059_bef.JPG
+    cat = raw_filename[:3]
+    return f"{cat}_{raw_filename}"
+
+
 def find_image(root_dir, filename):
     for dirpath, _, files in os.walk(root_dir):
         if filename in files:
@@ -88,8 +95,8 @@ class FoodWasteDataset(Dataset):
     def __getitem__(self, idx):
         row = self.df.iloc[idx]
 
-        before_path = find_image(self.before_dir, row['Image Before Eaten'])
-        after_path = find_image(self.after_dir, row['Image After Eaten'])
+        before_path = find_image(self.before_dir, _seg_filename(row['Image Before Eaten']))
+        after_path = find_image(self.after_dir, _seg_filename(row['Image After Eaten']))
 
         before = Image.open(before_path).convert('RGB')
         after = Image.open(after_path).convert('RGB')

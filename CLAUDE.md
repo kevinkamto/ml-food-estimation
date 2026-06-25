@@ -7,7 +7,7 @@ Multi-task deep learning system that estimates food waste in grams from before/a
 ## Project Structure
 
 ```
-food-waste-estimation/
+ml-food-waste-estimation/
 ├── CLAUDE.md
 ├── SPEC.md
 ├── data/

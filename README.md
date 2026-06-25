@@ -49,7 +49,7 @@ Both streams share EfficientNet-B0 weights (Siamese-style). Backbone is pretrain
 ## Project Structure
 
 ```
-food-waste-estimation/
+ml-food-waste-estimation/
 ├── CLAUDE.md                       # Agent instructions and project rules
 ├── SPEC.md                         # Detailed technical specification
 ├── data/
@@ -120,7 +120,7 @@ from google.colab import drive
 drive.mount('/content/drive')
 
 import os
-os.chdir('/content/drive/MyDrive/food-waste-estimation')  # adjust to your folder name
+os.chdir('/content/drive/MyDrive/ml-food-waste-estimation')  # adjust to your folder name
 
 !pip install -r requirements.txt
 ```

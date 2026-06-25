@@ -3,7 +3,8 @@
 **Project**: Multi-Task Deep Learning System for Automated Food Waste Estimation Using Dual-Stream CNN with EfficientNet-B0  
 **Reference paper**: https://doi.org/10.1371/journal.pone.0320426  
 **Dataset**: LeFoodSet -- 678 samples, 34 Indonesian food categories  
-**Environment**: Local (CPU/GPU) and Google Colab Pro (T4 GPU). The full project folder is stored on Google Drive and mounted in Colab, so all relative paths (`data/`, `checkpoints/`, `results/`) work identically in both environments.
+**Environment**: Local (CPU/GPU) and Google Colab Pro (T4 GPU). The full project folder is stored on Google Drive and mounted in Colab, so all relative paths (`data/`, `checkpoints/`, `results/`) work identically in both environments.  
+**Package manager**: `uv` for local development, `pip` for Colab.
 
 ---
 
@@ -231,6 +232,8 @@ def predict(before_path, after_path, checkpoint_path):
 | `src/utils.py`                            | Metrics, helpers, seed fixing          | To build       |
 | `checkpoints/`                            | Saved model weights per fold           | Auto-generated |
 | `results/summary.json`                    | Final metrics across all folds         | Auto-generated |
+| `pyproject.toml`                          | uv project config and dependencies     | Exists         |
+| `requirements.txt`                        | pip dependencies for Colab             | Exists         |
 
 ---
 

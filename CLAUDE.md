@@ -103,6 +103,14 @@ Dual-stream CNN with late fusion (per paper methodology):
 
 ---
 
+## Environment Rules
+
+- Local development uses `uv` as the package manager (`uv sync`, `uv run python ...`)
+- Google Colab uses `pip install -r requirements.txt` (uv is not pre-installed in Colab)
+- `pyproject.toml` is the source of truth for dependencies; `requirements.txt` mirrors it for Colab
+
+---
+
 ## Key Rules
 
 - ALWAYS use segmented images as input, not raw images
@@ -118,10 +126,13 @@ Dual-stream CNN with late fusion (per paper methodology):
 ## Commands
 
 ```bash
-# Install dependencies
-pip install torch torchvision timm pandas openpyxl scikit-learn matplotlib seaborn
+# Install dependencies (local -- uses uv)
+uv sync
 
-# Run training (local or Colab -- set working directory to project root first)
+# Install dependencies (Google Colab -- uses pip)
+pip install -r requirements.txt
+
+# Run training (set working directory to project root first)
 python src/train.py --folds 10 --epochs 100 --lr 0.0001 --batch_size 16
 
 # Run inference on a single pair

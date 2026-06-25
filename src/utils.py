@@ -21,5 +21,3 @@ def compute_rmse(preds, targets):
     return float(torch.sqrt(torch.mean((preds - targets) ** 2)))
 
 
-def denormalize(value, max_weight):
-    return value * max_weight

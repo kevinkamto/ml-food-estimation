@@ -1,32 +1,23 @@
+import timm
 import torch
 import torch.nn as nn
-import timm
 
 
 class DualStreamEfficientNet(nn.Module):
     def __init__(self, num_classes=34, pretrained=True):
         super().__init__()
 
-        self.backbone = timm.create_model('efficientnet_b0', pretrained=pretrained, num_classes=0)
+        self.backbone = timm.create_model("efficientnet_b0", pretrained=pretrained, num_classes=0)
         feature_dim = self.backbone.num_features  # 1280
 
-        self.fusion = nn.Sequential(
-            nn.Linear(feature_dim * 2, 1024),
-            nn.ReLU(),
-            nn.Dropout(0.3)
-        )
+        self.fusion = nn.Sequential(nn.Linear(feature_dim * 2, 1024), nn.ReLU(), nn.Dropout(0.3))
 
         self.regression_head = nn.Sequential(
-            nn.Linear(1024, 512),
-            nn.ReLU(),
-            nn.Linear(512, 1),
-            nn.Sigmoid()
+            nn.Linear(1024, 512), nn.ReLU(), nn.Linear(512, 1), nn.Sigmoid()
         )
 
         self.classification_head = nn.Sequential(
-            nn.Linear(1024, 512),
-            nn.ReLU(),
-            nn.Linear(512, num_classes)
+            nn.Linear(1024, 512), nn.ReLU(), nn.Linear(512, num_classes)
         )
 
     def forward(self, before, after):

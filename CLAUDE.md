@@ -1,6 +1,6 @@
 # Food Waste Estimation -- Dual-Stream CNN with EfficientNet-B0
 
-Multi-task deep learning system that estimates food waste in grams from before/after meal image pairs. Based on the LeFoodSet dataset (Indonesian hospital cafeteria food). Reproduces and adapts the methodology from: https://doi.org/10.1371/journal.pone.0320426
+Single-task deep learning system that estimates food consumption ratio from before/after meal image pairs, then denormalizes to grams. Based on the LeFoodSet dataset (Indonesian hospital cafeteria food). Reproduces and adapts the methodology from: https://doi.org/10.1371/journal.pone.0320426
 
 ---
 
@@ -38,7 +38,7 @@ ml-food-waste-estimation/
 - **524 usable samples** (678 in Excel, 154 lack segmented images and are skipped automatically), 34 food categories with complete image data
 - Each sample: before image + after image (both raw and segmented versions)
 - Metadata in `data_original.xlsx` with columns: ID, Name of the food, Image Before Eaten, Weight Before Eaten (g), Image After Eaten, Weight After Eaten (g), Visual Estimation by Observer (1-7)
-- **Target label**: `Weight Leftover (g) = Weight Before Eaten (g) - Weight After Eaten (g)`, normalized to 0.0-1.0
+- **Target label**: `consumption_ratio = Weight_After_Eaten (g) / Weight_Before_Eaten (g)`, clipped to [0, 1]. Denormalize: `w_after_hat = r_hat * w_before`
 - **Visual score**: 1 = not consumed at all, 7 = zero remaining (fully eaten), inverse of waste
 - Images have two resolution groups: ~500x400px and ~700x520px, always resize to 224x224
 
@@ -46,15 +46,15 @@ ml-food-waste-estimation/
 
 ## Model Architecture
 
-Dual-stream CNN with late fusion (per paper methodology):
+Single-task dual-stream EfficientNet-B0 with enhanced fusion:
 
-- **Stream 1**: Segmented before image -> EfficientNet-B0 -> feature vector
-- **Stream 2**: Segmented after image -> EfficientNet-B0 (shared or separate weights) -> feature vector
-- **Fusion**: Concatenate both feature vectors
-- **Multi-task heads**:
-  - Regression head -> normalized leftover value (0.0-1.0), primary task
-  - Classification head -> food category (34 classes), auxiliary task
-- **Loss**: Combined loss = 0.9 x regression_loss + 0.1 x classification_loss (per paper)
+- **Stream 1**: Segmented before image -> EfficientNet-B0 -> feat_before (1280,)
+- **Stream 2**: Segmented after image -> EfficientNet-B0 (shared weights) -> feat_after (1280,)
+- **Fusion**: concat([feat_before, feat_after, |feat_before - feat_after|, area_ratio]) -> (3841,)
+- **area_ratio**: scalar = non-black pixels in after_seg / non-black pixels in before_seg
+- **Regression head**: FC(3841->1024->512->1) + Sigmoid -> consumption ratio r in [0,1]
+- **No classification head** (single-task design)
+- **Loss**: HuberLoss(delta=0.1)
 - **Optimizer**: Adam, lr=0.0001
 - **Input**: Segmented images only (NOT raw images), background already removed
 
@@ -64,9 +64,11 @@ Dual-stream CNN with late fusion (per paper methodology):
 
 - **Framework**: PyTorch
 - **Environments**: Local machine (CPU or GPU) and Google Colab Pro (T4 GPU), code must run in both
-- **Cross-validation**: 10-fold (per paper), save indices for reproducibility
-- **Data split per fold**: 70% train / 20% validation / 10% test
+- **Cross-validation**: 5-fold GroupKFold grouped by food category (prevents leakage)
+- **Data split per fold**: train / val only (no separate test split)
 - **Early stopping**: Stop after 20 consecutive epochs with no improvement
+- **Scheduler**: ReduceLROnPlateau(factor=0.5, patience=5) on val MAE
+- **Sample weighting**: WeightedRandomSampler with inverse-frequency bin weights
 - **Checkpointing**: Save best-by-validation to `checkpoints/` relative to project root. On Colab, the project folder is mounted from Google Drive, so this path is already persisted on Drive.
 - **Random seeds**: Fix for Python, NumPy, PyTorch, and CUDA at start of every run
 
@@ -90,9 +92,9 @@ Dual-stream CNN with late fusion (per paper methodology):
 
 ## Evaluation Metrics
 
-- **Primary**: MAE on normalized leftover value (target: beat human observer MAE of 0.0926)
-- **Secondary**: RMSE, percentage error on grams
-- **Auxiliary**: Food classification accuracy (target: >90%)
+- **Primary**: MAE on consumption_ratio scale (target: beat human observer MAE of 0.0926)
+- **Secondary**: RMSE on consumption_ratio scale
+- **Gram-level reporting**: MAE and RMSE on weight_after_grams (informational only, not the training target)
 - **Baseline to beat**: Human visual observer MAE = 0.0926 (from paper)
 
 ---
@@ -115,11 +117,14 @@ Dual-stream CNN with late fusion (per paper methodology):
 
 - ALWAYS use segmented images as input, not raw images
 - ALWAYS apply the same augmentation transform to both the before and after image in a pair
-- ALWAYS normalize labels to 0.0-1.0 before training, never use raw gram values as target
+- ALWAYS use consumption ratio r = Weight_After / Weight_Before as target, never raw grams
+- ALWAYS compute area_ratio from segmented mask pixel counts and pass it to the model
+- ALWAYS denormalize predictions at reporting time: w_after_hat = r_hat * w_before
 - ALWAYS save checkpoints inside the project `checkpoints/` folder. On Colab, this persists to Drive because the project itself is on Drive.
 - ALWAYS fix random seeds before any split or training operation
-- NEVER use the visual score (1-7) as the training target, use weight leftover only
+- NEVER use the visual score (1-7) as the training target, use consumption ratio only
 - NEVER load the full dataset into memory, use PyTorch DataLoader with num_workers
+- NEVER add a classification head; this is a single-task regression model
 
 ---
 
@@ -133,7 +138,7 @@ uv sync
 pip install -r requirements.txt
 
 # Run training (set working directory to project root first)
-python src/train.py --folds 10 --epochs 100 --lr 0.0001 --batch_size 16
+python src/train.py --folds 5 --epochs 100 --lr 0.0001 --batch_size 16
 
 # Run inference on a single pair
 python src/inference.py --before path/to/before.jpg --after path/to/after.jpg --checkpoint checkpoints/best_fold_1.pth

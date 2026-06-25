@@ -1,8 +1,8 @@
 # Food Waste Estimation -- Dual-Stream CNN with EfficientNet-B0
 
-Multi-task deep learning system that estimates food waste in grams from before/after meal image pairs. Reproduces and extends the methodology from:
+Single-task deep learning system that estimates food consumption ratio from before/after meal image pairs, then denormalizes to grams. Reproduces and extends the methodology from:
 
-> **Automated Food Leftover Estimation Using Deep Learning**  
+> **Automated Food Leftover Estimation Using Deep Learning**
 > https://doi.org/10.1371/journal.pone.0320426
 
 Dataset: **LeFoodSet** -- 524 usable samples across 34 food categories (678 rows in Excel; 154 lack segmented images and are skipped automatically).
@@ -13,36 +13,40 @@ Dataset: **LeFoodSet** -- 524 usable samples across 34 food categories (678 rows
 
 Given a pair of segmented images (before and after a meal), the model predicts:
 
-- **Leftover weight in grams** (primary task, regression)
-- **Food category** (auxiliary task, 34-class classification)
+- **Consumption ratio** `r = w_after / w_before` in [0, 1] (primary output, regression)
+- **Weight after eating** in grams (optional, requires known serving weight)
 
-Target: beat the human visual observer baseline of **MAE = 0.0926** on the normalized leftover scale.
+Target: beat the human visual observer baseline of **MAE = 0.0926** on the consumption ratio scale.
 
 ---
 
 ## Architecture
 
-Dual-stream CNN with late fusion:
+Single-task dual-stream EfficientNet-B0 with enhanced fusion:
 
 ```
-Before image (3,224,224) -> EfficientNet-B0 -> feature_before (1280,)
-After image  (3,224,224) -> EfficientNet-B0 -> feature_after  (1280,)
+Before image (3,224,224) -> EfficientNet-B0 -> feat_before (1280,)
+After  image (3,224,224) -> EfficientNet-B0 -> feat_after  (1280,)
                                     |
-                          Concatenate -> (2560,)
+            |feat_before - feat_after| -> diff (1280,)
                                     |
-                      FC (2560 -> 1024) + ReLU + Dropout(0.3)
+  concat([feat_before, feat_after, diff, area_ratio]) -> (3841,)
                                     |
-              +---------------------+---------------------+
-              |                                           |
-      Regression head                       Classification head
-  FC(1024->512) -> FC(512->1)          FC(1024->512) -> FC(512->34)
-  Sigmoid -> leftover_norm (0-1)       Softmax -> food_category
+              FC(3841->1024) + ReLU + Dropout(0.3)
+              FC(1024->512)  + ReLU + Dropout(0.2)
+                                    |
+                      FC(512->1) + Sigmoid
+                                    |
+                    consumption_ratio r  in [0, 1]
 ```
 
-Both streams share EfficientNet-B0 weights (Siamese-style). Backbone is pretrained on ImageNet, frozen for the first 5 epochs, then fully unfrozen.
+Both streams share EfficientNet-B0 weights (Siamese-style). Backbone is pretrained on ImageNet, frozen for the first 5 epochs, then fully unfrozen (LR reset to initial value on unfreeze).
 
-**Loss**: `0.9 x MSE(regression) + 0.1 x CrossEntropy(classification)`  
+**area_ratio**: non-black pixel count of after image / before image -- gives the model an explicit visual coverage signal.
+
+**Loss**: `HuberLoss(delta=0.1)`
 **Optimizer**: Adam, lr=0.0001
+**Denormalize**: `w_after_hat = r_hat * w_before`
 
 ---
 
@@ -62,13 +66,14 @@ ml-food-waste-estimation/
 │       └── data_after/             # Segmented after images (black background)
 ├── notebooks/
 │   ├── LeFoodSet_Leftovers_EDA.ipynb
-│   ├── LeFoodSet_Leftovers_Training.ipynb              # Full training pipeline (local + Colab)
-│   └── LeFoodSet_Leftovers_Inference.ipynb             # Demo: load image pair and predict
+│   ├── LeFoodSet_Leftovers_Training.ipynb    # Full training pipeline (local + Colab)
+│   └── LeFoodSet_Leftovers_Inference.ipynb   # Demo: load image pair and predict
 ├── src/
-│   ├── dataset.py                  # FoodWasteDataset + transforms
-│   ├── model.py                    # DualStreamEfficientNet
-│   ├── train.py                    # 10-fold CV training loop
-│   └── utils.py                    # Metrics, seed fixing, logging
+│   ├── dataset.py                  # FoodWasteDataset, area_ratio, transforms
+│   ├── model.py                    # DualStreamEfficientNet (single-task)
+│   ├── train.py                    # 5-fold GroupKFold training loop
+│   ├── inference.py                # CLI inference script
+│   └── utils.py                    # Metrics, seed fixing
 ├── checkpoints/                    # Best model per fold
 └── results/                        # Metrics, logs, training curves
 ```
@@ -83,7 +88,7 @@ ml-food-waste-estimation/
 | Categories | 34 Indonesian foods |
 | Input | Segmented images (black background, `data/segmented/`) |
 | Metadata | `data/data_original.xlsx` |
-| Label | `Weight Before Eaten (g) - Weight After Eaten (g)`, normalized to 0-1 |
+| Label | `consumption_ratio = Weight_After / Weight_Before`, clipped to [0, 1] |
 | Resolution | ~500x400 or ~700x520, resized to 224x224 |
 
 **Important**: Always use segmented images as input. Never use raw images.
@@ -94,21 +99,16 @@ The visual score column (1-7) in the metadata is a human observer rating and is 
 
 ## Setup
 
-The code runs identically in both environments once dependencies are installed.
-
 ### Local (uv)
 
 [uv](https://docs.astral.sh/uv/) is the package manager for local development.
 
 ```bash
-# Install uv (if not already installed)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
 # Install all dependencies into a managed virtual environment
 uv sync
 
 # Run scripts inside the environment
-uv run python src/train.py --folds 10 --epochs 100 --lr 0.0001 --batch_size 16
+uv run python src/train.py --folds 5 --epochs 100 --lr 0.0001 --batch_size 16
 ```
 
 ### Google Colab
@@ -125,7 +125,7 @@ os.chdir('/content/drive/MyDrive/ml-food-waste-estimation')  # adjust to your fo
 !pip install -r requirements.txt
 ```
 
-After that, all relative paths (`data/`, `checkpoints/`, `results/`, `src/`) resolve correctly, and checkpoints are automatically persisted to Drive without any extra configuration.
+After that, all relative paths (`data/`, `checkpoints/`, `results/`, `src/`) resolve correctly, and checkpoints are automatically persisted to Drive.
 
 ---
 
@@ -133,18 +133,19 @@ After that, all relative paths (`data/`, `checkpoints/`, `results/`, `src/`) res
 
 Local (uv):
 ```bash
-uv run python src/train.py --folds 10 --epochs 100 --lr 0.0001 --batch_size 16
+uv run python src/train.py --folds 5 --epochs 100 --lr 0.0001 --batch_size 16
 ```
 
 Colab:
 ```bash
-python src/train.py --folds 10 --epochs 100 --lr 0.0001 --batch_size 16
+python src/train.py --folds 5 --epochs 100 --lr 0.0001 --batch_size 16
 ```
 
 Training details:
-- 10-fold cross-validation (StratifiedKFold on food category)
-- Split per fold: 70% train / 20% val / 10% test
-- Early stopping: patience = 20 epochs on val MAE
+- 5-fold GroupKFold (grouped by food category to prevent leakage)
+- WeightedRandomSampler with inverse-frequency bin weights (bimodal distribution)
+- ReduceLROnPlateau(factor=0.5, patience=5); LR reset when backbone unfreezes at epoch 6
+- Early stopping: patience=20 epochs on val MAE
 - Random seeds fixed at 42 for Python, NumPy, PyTorch, and CUDA
 
 Checkpoints are saved to `checkpoints/fold_{n}_best.pth` relative to the project root.
@@ -172,28 +173,30 @@ Local (uv):
 uv run python src/inference.py \
   --before path/to/before.jpg \
   --after  path/to/after.jpg \
-  --checkpoint checkpoints/best_fold_1.pth
+  --checkpoint checkpoints/fold_1_best.pth
 ```
 
-Colab:
+With optional serving weight for gram output:
 ```bash
-python src/inference.py \
+uv run python src/inference.py \
   --before path/to/before.jpg \
   --after  path/to/after.jpg \
-  --checkpoint checkpoints/best_fold_1.pth
+  --checkpoint checkpoints/fold_1_best.pth \
+  --weight_before 250
 ```
 
 Returns:
 ```json
 {
-  "leftover_normalized": 0.34,
-  "leftover_grams": 87.2,
-  "food_category": "Nasi Putih",
-  "confidence": 0.91
+  "consumption_ratio": 0.62,
+  "area_ratio": 0.58,
+  "weight_after_grams": 155.0,
+  "leftover_grams": 95.0,
+  "weight_before_grams": 250.0
 }
 ```
 
-Ensemble inference (all 10 folds, averaged) is available via `notebooks/LeFoodSet_Leftovers_Inference.ipynb`.
+Ensemble inference (all 5 folds, averaged) is available via `notebooks/LeFoodSet_Leftovers_Inference.ipynb`.
 
 ---
 
@@ -201,9 +204,8 @@ Ensemble inference (all 10 folds, averaged) is available via `notebooks/LeFoodSe
 
 | Metric | Target | Baseline |
 |---|---|---|
-| MAE (normalized) | **< 0.0926** | Human observer: 0.0926 |
-| Food classification accuracy | > 90% | N/A |
-| RMSE (normalized) | minimize | N/A |
+| MAE (consumption ratio) | **< 0.0926** | Human observer: 0.0926 |
+| RMSE (consumption ratio) | minimize | N/A |
 
 Results are aggregated in `results/summary.json` after all folds complete.
 
@@ -220,6 +222,7 @@ Results are aggregated in `results/summary.json` after all folds complete.
 ## Out of Scope
 
 - Training a segmentation model (ground-truth segmented images are provided)
+- Food category classification (single-task design)
 - Web or mobile deployment
 - Real-time video inference
 - Foods outside the 34 LeFoodSet categories

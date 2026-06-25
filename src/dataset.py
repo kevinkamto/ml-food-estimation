@@ -1,21 +1,29 @@
 import json
 import os
-import pickle
 import random as _random
 
+import numpy as np
 import pandas as pd
 import torch
 from loguru import logger
 from PIL import Image
-from sklearn.preprocessing import LabelEncoder
 from torch.utils.data import Dataset
 from torchvision import transforms
 
 
-def load_metadata(xlsx_path, before_dir, after_dir, save_dir="."):
+def load_metadata(xlsx_path: str, before_dir: str, after_dir: str, save_dir: str = ".") -> tuple:
+    """
+    Load and filter metadata. Returns (df, norm_params).
+
+    Target: consumption ratio r = Weight_After / Weight_Before in [0, 1].
+    Denormalize at inference: w_after_hat = r_hat * w_before.
+    """
     df = pd.read_excel(xlsx_path)
 
     df["Weight Leftover (g)"] = df["Weight Before Eaten (g)"] - df["Weight After Eaten (g)"]
+    assert (df["Weight Before Eaten (g)"] > 0).all(), (
+        "Zero or negative before-weight found in metadata"
+    )
     assert (df["Weight Leftover (g)"] >= 0).all(), "Negative leftover weights found in metadata"
 
     # Filter to rows where both segmented images exist on disk
@@ -31,37 +39,60 @@ def load_metadata(xlsx_path, before_dir, after_dir, save_dir="."):
         )
     df = df[mask].reset_index(drop=True)
 
-    max_weight = float(df["Weight Before Eaten (g)"].max())
-    df["leftover_normalized"] = df["Weight Leftover (g)"] / max_weight
+    # Consumption ratio: fraction of serving weight remaining after eating
+    df["consumption_ratio"] = df["Weight After Eaten (g)"] / df["Weight Before Eaten (g)"]
+    df["consumption_ratio"] = df["consumption_ratio"].clip(0.0, 1.0)
 
-    le = LabelEncoder()
-    df["category_id"] = le.fit_transform(df["Name of the food"])
+    # Group label for GroupKFold -- group by food category to prevent leakage
+    df["group"] = df["Name of the food"]
 
     os.makedirs(save_dir, exist_ok=True)
-    norm_params = {"max_weight": max_weight}
+    norm_params = {
+        "target": "consumption_ratio",
+        "description": "r = w_after / w_before; denormalize: w_after_hat = r_hat * w_before",
+    }
     with open(os.path.join(save_dir, "normalization_params.json"), "w") as f:
         json.dump(norm_params, f, indent=2)
-    with open(os.path.join(save_dir, "label_encoder.pkl"), "wb") as f:
-        pickle.dump(le, f)
 
-    return df, norm_params, le
+    return df, norm_params
 
 
-def _seg_filename(raw_filename):
+def compute_class_weights(df: pd.DataFrame, n_bins: int = 10) -> torch.Tensor:
+    """
+    Inverse-frequency weights for WeightedRandomSampler.
+    Bins the continuous consumption_ratio into n_bins buckets and returns
+    per-sample weights proportional to 1 / bin_frequency.
+    """
+    ratios = df["consumption_ratio"].values
+    bin_indices = np.digitize(ratios, np.linspace(0, 1, n_bins + 1)[1:-1])
+    bin_counts = np.bincount(bin_indices, minlength=n_bins)
+    bin_counts = np.where(bin_counts == 0, 1, bin_counts)
+    weights = 1.0 / bin_counts[bin_indices]
+    weights = weights / weights.sum() * len(weights)
+    return torch.tensor(weights, dtype=torch.float32)
+
+
+def _pixel_area(image_path: str) -> float:
+    """Count non-black pixels in a segmented image (black background)."""
+    arr = np.array(Image.open(image_path).convert("RGB"))
+    return float(np.any(arr > 0, axis=2).sum())
+
+
+def _seg_filename(raw_filename: str) -> str:
     # Segmented files are named {category}_{raw_filename}, e.g.
     # raw: 001_001_DSC_0059_bef.JPG -> segmented: 001_001_001_DSC_0059_bef.JPG
     cat = raw_filename[:3]
     return f"{cat}_{raw_filename}"
 
 
-def find_image(root_dir, filename):
+def find_image(root_dir: str, filename: str) -> str:
     for dirpath, _, files in os.walk(root_dir):
         if filename in files:
             return os.path.join(dirpath, filename)
     raise FileNotFoundError(f"Image '{filename}' not found under {root_dir}")
 
 
-def get_transforms(mode="train"):
+def get_transforms(mode: str = "train") -> transforms.Compose:
     if mode == "train":
         return transforms.Compose(
             [
@@ -89,7 +120,9 @@ def get_transforms(mode="train"):
     )
 
 
-def _apply_pair_transform(transform, img1, img2):
+def _apply_pair_transform(
+    transform: transforms.Compose, img1: Image.Image, img2: Image.Image
+) -> tuple:
     seed = torch.randint(0, 2**32, (1,)).item()
     _random.seed(seed)
     torch.manual_seed(seed)
@@ -101,32 +134,50 @@ def _apply_pair_transform(transform, img1, img2):
 
 
 class FoodWasteDataset(Dataset):
-    def __init__(self, df, before_dir, after_dir, transform=None):
+    def __init__(
+        self,
+        df: pd.DataFrame,
+        before_dir: str,
+        after_dir: str,
+        transform: transforms.Compose | None = None,
+    ) -> None:
         self.df = df.reset_index(drop=True)
         self.before_dir = before_dir
         self.after_dir = after_dir
         self.transform = transform
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.df)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> dict:
         row = self.df.iloc[idx]
 
-        before_path = find_image(self.before_dir, _seg_filename(row["Image Before Eaten"]))
-        after_path = find_image(self.after_dir, _seg_filename(row["Image After Eaten"]))
+        before_seg = _seg_filename(row["Image Before Eaten"])
+        after_seg = _seg_filename(row["Image After Eaten"])
 
-        before = Image.open(before_path).convert("RGB")
-        after = Image.open(after_path).convert("RGB")
+        before_path = find_image(self.before_dir, before_seg)
+        after_path = find_image(self.after_dir, after_seg)
+
+        before_img = Image.open(before_path).convert("RGB")
+        after_img = Image.open(after_path).convert("RGB")
+
+        # Area ratio computed from already-loaded arrays to avoid a second disk read
+        before_arr = np.array(before_img)
+        after_arr = np.array(after_img)
+        before_area = float(np.any(before_arr > 0, axis=2).sum())
+        after_area = float(np.any(after_arr > 0, axis=2).sum())
+        area_ratio = float(after_area / before_area) if before_area > 0 else 0.0
+        area_ratio = min(area_ratio, 1.0)
 
         if self.transform:
-            before, after = _apply_pair_transform(self.transform, before, after)
+            before_img, after_img = _apply_pair_transform(self.transform, before_img, after_img)
 
         return {
-            "before": before,
-            "after": after,
-            "leftover_norm": torch.tensor(row["leftover_normalized"], dtype=torch.float32),
-            "category": torch.tensor(row["category_id"], dtype=torch.long),
-            "leftover_g": float(row["Weight Leftover (g)"]),
+            "before": before_img,
+            "after": after_img,
+            "area_ratio": torch.tensor(area_ratio, dtype=torch.float32),
+            "consumption_ratio": torch.tensor(row["consumption_ratio"], dtype=torch.float32),
+            "weight_before": float(row["Weight Before Eaten (g)"]),
+            "weight_after": float(row["Weight After Eaten (g)"]),
             "food_name": str(row["Name of the food"]),
         }

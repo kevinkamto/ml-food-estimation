@@ -8,30 +8,31 @@ import pandas as pd
 import torch
 import torch.nn as nn
 from loguru import logger
-from sklearn.model_selection import StratifiedKFold
-from torch.utils.data import DataLoader
+from sklearn.model_selection import GroupKFold
+from torch.utils.data import DataLoader, WeightedRandomSampler
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from dataset import FoodWasteDataset, get_transforms, load_metadata
+from dataset import FoodWasteDataset, compute_class_weights, get_transforms, load_metadata
 from model import DualStreamEfficientNet
 from utils import compute_mae, compute_rmse, set_seed
 
 
 def train_fold(
-    model,
-    train_loader,
-    val_loader,
-    optimizer,
-    device,
-    epochs,
-    patience,
-    fold_n,
-    checkpoint_dir,
-    norm_params,
-    label_classes,
-):
-    mse_loss = nn.MSELoss()
-    ce_loss = nn.CrossEntropyLoss()
+    model: DualStreamEfficientNet,
+    train_loader: DataLoader,
+    val_loader: DataLoader,
+    optimizer: torch.optim.Optimizer,
+    device: torch.device,
+    epochs: int,
+    patience: int,
+    fold_n: int,
+    checkpoint_dir: str,
+    norm_params: dict,
+) -> tuple[float, pd.DataFrame]:
+    criterion = nn.HuberLoss(delta=0.1)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, mode="min", factor=0.5, patience=5, min_lr=1e-6
+    )
 
     best_val_mae = float("inf")
     epochs_no_improve = 0
@@ -40,70 +41,72 @@ def train_fold(
     for epoch in range(1, epochs + 1):
         if epoch == 6:
             model.unfreeze_backbone()
+            # Reset LR so backbone fine-tuning starts at the full rate,
+            # not whatever the scheduler may have already reduced it to.
+            for pg in optimizer.param_groups:
+                pg["lr"] = optimizer.defaults["lr"]
 
+        # Train
         model.train()
-        train_losses = []
+        train_losses: list[float] = []
         for batch in train_loader:
             before = batch["before"].to(device)
             after = batch["after"].to(device)
-            leftover_norm = batch["leftover_norm"].to(device)
-            category = batch["category"].to(device)
+            area_ratio = batch["area_ratio"].to(device)
+            target = batch["consumption_ratio"].to(device)
 
             optimizer.zero_grad()
-            pred_leftover, pred_category = model(before, after)
-            loss = 0.9 * mse_loss(pred_leftover, leftover_norm) + 0.1 * ce_loss(
-                pred_category, category
-            )
+            pred = model(before, after, area_ratio)
+            loss = criterion(pred, target)
             loss.backward()
             optimizer.step()
             train_losses.append(loss.item())
 
+        # Validate
         model.eval()
-        val_preds, val_targets = [], []
-        val_cat_preds, val_cat_targets = [], []
-        val_losses = []
+        val_preds: list[torch.Tensor] = []
+        val_targets: list[torch.Tensor] = []
+        val_losses: list[float] = []
 
         with torch.no_grad():
             for batch in val_loader:
                 before = batch["before"].to(device)
                 after = batch["after"].to(device)
-                leftover_norm = batch["leftover_norm"].to(device)
-                category = batch["category"].to(device)
+                area_ratio = batch["area_ratio"].to(device)
+                target = batch["consumption_ratio"].to(device)
 
-                pred_leftover, pred_category = model(before, after)
-                loss = 0.9 * mse_loss(pred_leftover, leftover_norm) + 0.1 * ce_loss(
-                    pred_category, category
-                )
+                pred = model(before, after, area_ratio)
+                loss = criterion(pred, target)
                 val_losses.append(loss.item())
-                val_preds.append(pred_leftover.cpu())
-                val_targets.append(leftover_norm.cpu())
-                val_cat_preds.append(pred_category.argmax(dim=1).cpu())
-                val_cat_targets.append(category.cpu())
+                val_preds.append(pred.cpu())
+                val_targets.append(target.cpu())
 
-        val_preds = torch.cat(val_preds)
-        val_targets = torch.cat(val_targets)
-        val_cat_preds = torch.cat(val_cat_preds)
-        val_cat_targets = torch.cat(val_cat_targets)
+        val_preds_t = torch.cat(val_preds)
+        val_targets_t = torch.cat(val_targets)
 
-        val_mae = compute_mae(val_preds, val_targets)
-        val_rmse = compute_rmse(val_preds, val_targets)
-        val_acc = float((val_cat_preds == val_cat_targets).float().mean())
+        val_mae = compute_mae(val_preds_t, val_targets_t)
+        val_rmse = compute_rmse(val_preds_t, val_targets_t)
+        train_loss = float(np.mean(train_losses))
+        val_loss = float(np.mean(val_losses))
+
+        scheduler.step(val_mae)
 
         logger.info(
             f"Fold {fold_n} | Epoch {epoch:3d} | "
-            f"Train Loss: {np.mean(train_losses):.4f} | "
-            f"Val Loss: {np.mean(val_losses):.4f} | "
-            f"Val MAE: {val_mae:.4f} | Val Acc: {val_acc:.4f}"
+            f"Train Loss: {train_loss:.4f} | "
+            f"Val Loss: {val_loss:.4f} | "
+            f"Val MAE: {val_mae:.4f} | "
+            f"LR: {optimizer.param_groups[0]['lr']:.2e}"
         )
 
         log_rows.append(
             {
                 "epoch": epoch,
-                "train_loss": float(np.mean(train_losses)),
-                "val_loss": float(np.mean(val_losses)),
+                "train_loss": train_loss,
+                "val_loss": val_loss,
                 "val_mae": val_mae,
                 "val_rmse": val_rmse,
-                "val_acc": val_acc,
+                "lr": optimizer.param_groups[0]["lr"],
             }
         )
 
@@ -119,7 +122,6 @@ def train_fold(
                     "optimizer_state_dict": optimizer.state_dict(),
                     "val_mae": best_val_mae,
                     "normalization_params": norm_params,
-                    "label_encoder_classes": label_classes,
                 },
                 os.path.join(checkpoint_dir, f"fold_{fold_n}_best.pth"),
             )
@@ -134,9 +136,9 @@ def train_fold(
     return best_val_mae, pd.DataFrame(log_rows)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Train dual-stream food waste estimator")
-    parser.add_argument("--folds", type=int, default=10)
+    parser.add_argument("--folds", type=int, default=5)
     parser.add_argument("--epochs", type=int, default=100)
     parser.add_argument("--lr", type=float, default=0.0001)
     parser.add_argument("--batch_size", type=int, default=16)
@@ -157,24 +159,26 @@ def main():
     results_dir = "results"
     os.makedirs(results_dir, exist_ok=True)
 
-    df, norm_params, le = load_metadata(
+    df, norm_params = load_metadata(
         os.path.join(data_dir, "data_original.xlsx"),
         before_dir=before_dir,
         after_dir=after_dir,
         save_dir=results_dir,
     )
-    label_classes = le.classes_.tolist()
 
     train_transform = get_transforms("train")
     val_transform = get_transforms("val")
 
-    skf = StratifiedKFold(n_splits=args.folds, shuffle=True, random_state=args.seed)
-    labels = df["category_id"].values
-    fold_indices = {}
-    fold_maes = []
+    gkf = GroupKFold(n_splits=args.folds)
+    groups = df["group"].values
+    fold_indices: dict = {}
+    fold_maes: list[float] = []
+    all_fold_logs: list[pd.DataFrame] = []
 
-    for fold_n, (trainval_idx, test_idx) in enumerate(
-        skf.split(np.arange(len(df)), labels), start=1
+    pin_memory = device.type == "cuda"
+
+    for fold_n, (train_idx, val_idx) in enumerate(
+        gkf.split(np.arange(len(df)), groups=groups), start=1
     ):
         logger.info(f"{'=' * 60}")
         logger.info(f"Fold {fold_n}/{args.folds}")
@@ -182,36 +186,39 @@ def main():
 
         set_seed(args.seed + fold_n)
 
-        n_val = int(len(trainval_idx) * (0.2 / 0.9))
-        np.random.shuffle(trainval_idx)
-        val_idx = trainval_idx[:n_val]
-        train_idx = trainval_idx[n_val:]
-
         fold_indices[f"fold_{fold_n}"] = {
             "train": train_idx.tolist(),
             "val": val_idx.tolist(),
-            "test": test_idx.tolist(),
         }
 
-        train_ds = FoodWasteDataset(df.iloc[train_idx], before_dir, after_dir, train_transform)
-        val_ds = FoodWasteDataset(df.iloc[val_idx], before_dir, after_dir, val_transform)
+        train_df = df.iloc[train_idx]
+        val_df = df.iloc[val_idx]
+
+        train_ds = FoodWasteDataset(train_df, before_dir, after_dir, train_transform)
+        val_ds = FoodWasteDataset(val_df, before_dir, after_dir, val_transform)
+
+        # Inverse-frequency sample weighting for imbalanced ratio distribution
+        sample_weights = compute_class_weights(train_df)
+        sampler = WeightedRandomSampler(
+            weights=sample_weights, num_samples=len(sample_weights), replacement=True
+        )
 
         train_loader = DataLoader(
             train_ds,
             batch_size=args.batch_size,
-            shuffle=True,
+            sampler=sampler,
             num_workers=args.num_workers,
-            pin_memory=True,
+            pin_memory=pin_memory,
         )
         val_loader = DataLoader(
             val_ds,
             batch_size=args.batch_size,
             shuffle=False,
             num_workers=args.num_workers,
-            pin_memory=True,
+            pin_memory=pin_memory,
         )
 
-        model = DualStreamEfficientNet(num_classes=len(label_classes), pretrained=True).to(device)
+        model = DualStreamEfficientNet(pretrained=True).to(device)
         model.freeze_backbone()
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
 
@@ -226,14 +233,20 @@ def main():
             fold_n,
             checkpoint_dir,
             norm_params,
-            label_classes,
         )
         fold_maes.append(best_mae)
+        log_df["fold"] = fold_n
+        all_fold_logs.append(log_df)
         log_df.to_csv(os.path.join(results_dir, f"fold_{fold_n}_log.csv"), index=False)
         logger.info(f"Fold {fold_n} best val MAE: {best_mae:.4f}")
 
     with open(os.path.join(results_dir, "fold_indices.json"), "w") as f:
         json.dump(fold_indices, f, indent=2)
+
+    # Save combined results CSV
+    pd.concat(all_fold_logs, ignore_index=True).to_csv(
+        os.path.join(results_dir, "all_folds_log.csv"), index=False
+    )
 
     summary = {
         "fold_maes": fold_maes,

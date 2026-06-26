@@ -186,7 +186,22 @@ def segment_image(
             ext=".jpg",
         )
 
-    result_bgr = _normalize_plate(resized_bgr, plate_mask, debug_dir=debug_dir, image_id=image_id)
+    food_hint = _build_food_hint_mask(resized_bgr, plate_mask)
+    food_mask = _refine_food_mask_with_sam(
+        resized_bgr,
+        plate_mask,
+        food_hint,
+        debug_dir=debug_dir,
+        image_id=image_id,
+    )
+
+    result_bgr = _normalize_plate(
+        resized_bgr,
+        plate_mask,
+        food_mask,
+        debug_dir=debug_dir,
+        image_id=image_id,
+    )
 
     if debug_dir is not None:
         _save_debug_step(debug_dir, image_id, 5, 0, "result", result_bgr, as_bgr=True, ext=".jpg")
@@ -239,11 +254,29 @@ def _build_sam_prompt_points(w0: int, h0: int, pad_left: int, pad_top: int, scal
     return np.array(points, dtype=np.float32)
 
 
-def _draw_prompt_points(image: np.ndarray, prompt_coords: np.ndarray, radius: int = 10) -> np.ndarray:
+def _draw_prompt_points(
+    image: np.ndarray,
+    prompt_coords: np.ndarray,
+    point_labels: np.ndarray | None = None,
+    point_categories: list[str] | None = None,
+    radius: int = 10,
+) -> np.ndarray:
     overlay = image.copy()
     for idx, (x, y) in enumerate(prompt_coords.tolist()):
         point = (int(round(x)), int(round(y)))
-        color = (0, 0, 255) if idx < 5 else (255, 0, 0)
+        if point_categories is not None:
+            category = point_categories[idx]
+            if category == "food":
+                color = (0, 0, 255)
+            elif category == "plate":
+                color = (0, 255, 0)
+            else:
+                color = (255, 0, 0)
+        elif point_labels is not None:
+            color = (0, 0, 255) if point_labels[idx] == 1 else (255, 0, 0)
+        else:
+            color = (0, 0, 255)
+
         cv2.circle(overlay, point, radius, color, thickness=-1)
         cv2.putText(
             overlay,
@@ -256,6 +289,176 @@ def _draw_prompt_points(image: np.ndarray, prompt_coords: np.ndarray, radius: in
             lineType=cv2.LINE_AA,
         )
     return overlay
+
+
+def _build_food_hint_mask(
+    bgr: np.ndarray,
+    plate_mask: np.ndarray,
+    debug_dir: str | None = None,
+    image_id: str | None = None,
+) -> np.ndarray:
+    hsv = cv2.cvtColor(bgr, cv2.COLOR_BGR2HSV)
+    s = hsv[:, :, 1]
+    v = hsv[:, :, 2]
+
+    gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY).astype(np.float32)
+    mean = cv2.blur(gray, (7, 7))
+    mean_sq = cv2.blur(gray**2, (7, 7))
+    texture_std = np.sqrt(np.clip(mean_sq - mean**2, 0, None))
+
+    inside = plate_mask == 255
+    plate_surface = (
+        inside & (s < _PLATE_SAT_MAX) & (v > _PLATE_VAL_MIN) & (texture_std < _PLATE_TEX_MAX)
+    )
+    food_hint = inside & ~plate_surface
+
+    if debug_dir is not None:
+        image_id = image_id or "image"
+        _save_debug_step(debug_dir, image_id, 4, 1, "food_hint", food_hint.astype(np.uint8) * 255)
+        _save_debug_step(debug_dir, image_id, 4, 2, "plate_surface_hint", plate_surface.astype(np.uint8) * 255)
+
+    return (food_hint.astype(np.uint8) * 255)
+
+
+def _get_plate_edge_points(mask: np.ndarray) -> np.ndarray:
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if not contours:
+        return np.zeros((0, 2), dtype=np.float32)
+
+    contour = max(contours, key=cv2.contourArea).reshape(-1, 2)
+    top = contour[np.argmin(contour[:, 1])]
+    bottom = contour[np.argmax(contour[:, 1])]
+    left = contour[np.argmin(contour[:, 0])]
+    right = contour[np.argmax(contour[:, 0])]
+    points = np.vstack([top, right, bottom, left]).astype(np.float32)
+    return points
+
+
+def _build_food_prompt_points(
+    bgr: np.ndarray,
+    plate_mask: np.ndarray,
+    food_hint: np.ndarray,
+    max_food_points: int = 8,
+) -> tuple[np.ndarray, np.ndarray, list[str]]:
+    h, w = bgr.shape[:2]
+    corners = np.array(
+        [[0.0, 0.0], [float(w - 1), 0.0], [0.0, float(h - 1)], [float(w - 1), float(h - 1)]],
+        dtype=np.float32,
+    )
+    plate_points = _get_plate_edge_points(plate_mask)
+    if plate_points.shape[0] < 4:
+        plate_points = np.array([corners[0], corners[1], corners[2], corners[3]], dtype=np.float32)
+
+    food_locations = np.argwhere(food_hint == 255)
+    if food_locations.size == 0:
+        return np.zeros((0, 2), dtype=np.float32), np.zeros((0,), dtype=np.int32), []
+
+    if len(food_locations) <= max_food_points:
+        selected = food_locations
+    else:
+        step = len(food_locations) / float(max_food_points)
+        selected = food_locations[(np.arange(max_food_points) * step).astype(int)]
+
+    food_points = selected[:, ::-1].astype(np.float32)
+
+    prompt_coords = np.vstack([food_points, plate_points, corners])
+    point_labels = np.concatenate(
+        [np.ones(len(food_points), dtype=np.int32), np.zeros(len(plate_points) + len(corners), dtype=np.int32)]
+    )
+    categories = ["food"] * len(food_points) + ["plate"] * len(plate_points) + ["bg"] * len(corners)
+    return prompt_coords, point_labels, categories
+
+
+def _choose_best_food_mask(masks: np.ndarray, food_hint: np.ndarray) -> np.ndarray:
+    if masks.shape[0] == 0:
+        return np.zeros_like(food_hint, dtype=np.uint8)
+
+    best_iou = -1.0
+    best_mask = np.zeros_like(food_hint, dtype=np.uint8)
+    hint_bool = food_hint.astype(bool)
+    for mask in masks:
+        mask_bool = mask.astype(bool)
+        intersection = np.logical_and(mask_bool, hint_bool).sum()
+        union = np.logical_or(mask_bool, hint_bool).sum()
+        iou = float(intersection) / float(union) if union > 0 else 0.0
+        if iou > best_iou:
+            best_iou = iou
+            best_mask = mask.astype(np.uint8) * 255
+    return best_mask
+
+
+def _refine_food_mask_with_sam(
+    bgr: np.ndarray,
+    plate_mask: np.ndarray,
+    food_hint: np.ndarray,
+    debug_dir: str | None = None,
+    image_id: str | None = None,
+) -> np.ndarray:
+    if np.count_nonzero(food_hint) == 0:
+        return np.zeros_like(food_hint, dtype=np.uint8)
+
+    prompt_coords, point_labels, categories = _build_food_prompt_points(bgr, plate_mask, food_hint)
+    if prompt_coords.shape[0] == 0:
+        return np.zeros_like(food_hint, dtype=np.uint8)
+
+    if debug_dir is not None:
+        image_id = image_id or "image"
+        _save_debug_step(
+            debug_dir,
+            image_id,
+            3,
+            51,
+            "food_prompt_overlay",
+            _draw_prompt_points(bgr, prompt_coords, point_labels=point_labels, point_categories=categories),
+            as_bgr=True,
+            ext=".jpg",
+        )
+
+    rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
+    predictor = _get_sam_predictor()
+    predictor.set_image(rgb)
+
+    mask_input = cv2.resize(plate_mask, (256, 256), interpolation=cv2.INTER_NEAREST)
+    mask_input = (mask_input > 128).astype(np.float32)[None, :, :]
+
+    masks, scores, _ = predictor.predict(
+        point_coords=prompt_coords,
+        point_labels=point_labels,
+        mask_input=mask_input,
+        multimask_output=True,
+    )
+
+    if debug_dir is not None:
+        image_id = image_id or "image"
+        for i, mask in enumerate(masks):
+            mask_img = (mask.astype(np.uint8) * 255)
+            _save_debug_step(debug_dir, image_id, 3, 60 + i * 3 + 1, f"sam_food_mask_{i:02d}", mask_img)
+            _save_debug_step(
+                debug_dir,
+                image_id,
+                3,
+                60 + i * 3 + 2,
+                f"sam_food_mask_{i:02d}_overlay",
+                _overlay_mask(bgr, mask_img),
+                as_bgr=True,
+                ext=".jpg",
+            )
+
+    best_mask = _choose_best_food_mask(masks, food_hint)
+    if debug_dir is not None:
+        _save_debug_step(debug_dir, image_id, 3, 99, "sam_food_mask_best", best_mask)
+        _save_debug_step(
+            debug_dir,
+            image_id,
+            3,
+            100,
+            "sam_food_mask_best_overlay",
+            _overlay_mask(bgr, best_mask),
+            as_bgr=True,
+            ext=".jpg",
+        )
+
+    return best_mask
 
 
 def _detect_plate_mask(
@@ -346,56 +549,25 @@ def _detect_plate_mask(
 def _normalize_plate(
     bgr: np.ndarray,
     plate_mask: np.ndarray,
+    food_mask: np.ndarray,
     debug_dir: str | None = None,
     image_id: str | None = None,
 ) -> np.ndarray:
     """
-    Stage 2: within the plate mask, classify pixels by HSV + local texture.
+    Convert the plate area into white plate surface and original food using a refined food mask.
 
-    Plate surface: S < _PLATE_SAT_MAX AND V > _PLATE_VAL_MIN AND texture_std < _PLATE_TEX_MAX
-    Food:          everything else inside the mask -> keep original BGR
-    Outside mask:  (0, 0, 0)
-
-    Texture check is required to preserve white/cream foods (rice, porridge -- ~29% of dataset).
-    Rice grains have local std ~10-20; smooth plate surface has local std ~3-8.
-
-    When debug mode is enabled, this function saves:
-      - HSV saturation and value channels
-      - gray and texture standard deviation maps
-      - the raw inside-mask and plate-condition masks
-      - plate surface classification before and after noise removal
-      - overlay of removed small plate noise dots
+    Food is kept as original BGR inside the plate mask when the SAM-refined food mask is present.
+    Plate surface pixels inside the plate mask but outside the food mask become white.
+    Outside mask becomes black.
     """
-    hsv = cv2.cvtColor(bgr, cv2.COLOR_BGR2HSV)
-    s = hsv[:, :, 1]
-    v = hsv[:, :, 2]
-
-    gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY).astype(np.float32)
-    mean = cv2.blur(gray, (7, 7))
-    mean_sq = cv2.blur(gray**2, (7, 7))
-    texture_std = np.sqrt(np.clip(mean_sq - mean**2, 0, None))
-
     inside = plate_mask == 255
-    plate_surface = (
-        inside & (s < _PLATE_SAT_MAX) & (v > _PLATE_VAL_MIN) & (texture_std < _PLATE_TEX_MAX)
-    )
-    plate_condition = (s < _PLATE_SAT_MAX) & (v > _PLATE_VAL_MIN) & (texture_std < _PLATE_TEX_MAX)
-
-    plate_surface_clean = _remove_plate_noise(plate_surface)
-    small_plate_dots = plate_surface & ~plate_surface_clean
-    plate_surface = plate_surface_clean
+    food = (food_mask == 255) & inside
+    plate_surface = inside & ~food
 
     if debug_dir is not None:
         image_id = image_id or "image"
-        _save_debug_step(debug_dir, image_id, 4, 1, "hsv_s", s)
-        _save_debug_step(debug_dir, image_id, 4, 2, "hsv_v", v)
-        _save_debug_step(debug_dir, image_id, 4, 3, "gray", gray)
-        _save_debug_step(debug_dir, image_id, 4, 4, "texture_std", texture_std)
-        _save_debug_step(debug_dir, image_id, 4, 5, "inside_mask", inside.astype(np.uint8) * 255)
-        _save_debug_step(debug_dir, image_id, 4, 6, "plate_condition", plate_condition.astype(np.uint8) * 255)
-        _save_debug_step(debug_dir, image_id, 4, 7, "plate_surface_mask_before", (plate_surface | small_plate_dots).astype(np.uint8) * 255)
-        _save_debug_step(debug_dir, image_id, 4, 8, "plate_surface_mask_after", plate_surface.astype(np.uint8) * 255)
-        _save_debug_step(debug_dir, image_id, 4, 9, "plate_surface_small_dot_overlay", _overlay_mask(bgr, small_plate_dots.astype(np.uint8) * 255), as_bgr=True, ext=".jpg")
+        _save_debug_step(debug_dir, image_id, 4, 1, "food_mask", food.astype(np.uint8) * 255)
+        _save_debug_step(debug_dir, image_id, 4, 2, "food_mask_overlay", _overlay_mask(bgr, food.astype(np.uint8) * 255), as_bgr=True, ext=".jpg")
 
     result = np.zeros_like(bgr)
     result[inside] = bgr[inside]

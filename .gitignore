@@ -9,14 +9,17 @@ checkpoints/*.pth
 checkpoints/*.pt
 
 # Training outputs
-results/*.csv
-results/*.json
-results/*.png
-results/*.jpg
-results/*.txt
+results/**/*.csv
+results/**/*.json
+results/**/*.png
+results/**/*.jpg
+results/**/*.txt
 
 # Debug outputs
 debug/
+
+# Temp folder
+temp/
 
 # uv
 .venv/

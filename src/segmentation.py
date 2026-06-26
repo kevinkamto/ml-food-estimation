@@ -38,6 +38,28 @@ def _save_debug_image(debug_dir: str, filename: str, array: np.ndarray, *, as_bg
     save_ndarray_image(array, os.path.join(debug_dir, filename), as_bgr=as_bgr)
 
 
+def _debug_filename(image_id: str, main: int, sub: int, meaning: str, ext: str) -> str:
+    safe_desc = meaning.replace(" ", "_")
+    return f"{image_id}_{main:02d}.{sub:02d}_{safe_desc}{ext}"
+
+
+def _save_debug_step(
+    debug_dir: str,
+    image_id: str,
+    main: int,
+    sub: int,
+    meaning: str,
+    array: np.ndarray,
+    *,
+    as_bgr: bool = False,
+    ext: str | None = None,
+) -> None:
+    if ext is None:
+        ext = ".png"
+    filename = _debug_filename(image_id, main, sub, meaning, ext)
+    _save_debug_image(debug_dir, filename, array, as_bgr=as_bgr)
+
+
 def _overlay_mask(image: np.ndarray, mask: np.ndarray, alpha: float = 0.35) -> np.ndarray:
     overlay = image.copy()
     mask_rgb = np.zeros_like(image)
@@ -87,15 +109,16 @@ def segment_image(
     if debug_dir is not None:
         os.makedirs(debug_dir, exist_ok=True)
 
+    image_id = Path(input_path).stem
     h0, w0 = bgr.shape[:2]
     bgr_sq, pad_top, pad_left = _pad_to_square(bgr)
     if debug_dir is not None:
-        _save_debug_image(debug_dir, "01_padded.jpg", bgr_sq, as_bgr=True)
+        _save_debug_step(debug_dir, image_id, 1, 0, "padded", bgr_sq, as_bgr=True)
 
     side = max(h0, w0)
     bgr_800 = cv2.resize(bgr_sq, (_OUT_SIZE, _OUT_SIZE), interpolation=cv2.INTER_LINEAR)
     if debug_dir is not None:
-        _save_debug_image(debug_dir, "02_resized.jpg", bgr_800, as_bgr=True)
+        _save_debug_step(debug_dir, image_id, 2, 0, "resized", bgr_800, as_bgr=True)
 
     scale = _OUT_SIZE / float(side)
     prompt_coords = _build_sam_prompt_coords(w0, h0, pad_left, pad_top, scale)
@@ -103,20 +126,25 @@ def segment_image(
         bgr_800,
         prompt_coords=prompt_coords,
         debug_dir=debug_dir,
+        image_id=image_id,
     )
     if debug_dir is not None:
-        _save_debug_image(debug_dir, "03_plate_mask.png", plate_mask)
-        _save_debug_image(
+        _save_debug_step(debug_dir, image_id, 3, 5, "plate_mask", plate_mask)
+        _save_debug_step(
             debug_dir,
-            "04_plate_mask_overlay.jpg",
+            image_id,
+            3,
+            6,
+            "plate_mask_overlay",
             _overlay_mask(bgr_800, plate_mask),
             as_bgr=True,
+            ext=".jpg",
         )
 
-    result_bgr = _normalize_plate(bgr_800, plate_mask, debug_dir=debug_dir)
+    result_bgr = _normalize_plate(bgr_800, plate_mask, debug_dir=debug_dir, image_id=image_id)
 
     if debug_dir is not None:
-        _save_debug_image(debug_dir, "05_result.jpg", result_bgr, as_bgr=True)
+        _save_debug_step(debug_dir, image_id, 5, 0, "result", result_bgr, as_bgr=True, ext=".jpg")
 
     rgb = cv2.cvtColor(result_bgr, cv2.COLOR_BGR2RGB)
     out = Image.fromarray(rgb)
@@ -189,6 +217,7 @@ def _detect_plate_sam(
     bgr: np.ndarray,
     prompt_coords: np.ndarray | None = None,
     debug_dir: str | None = None,
+    image_id: str | None = None,
 ) -> np.ndarray:
     """
     Stage 1: SAM ViT-B with center-point + corner-background prompts.
@@ -225,23 +254,33 @@ def _detect_plate_sam(
     )
 
     if debug_dir is not None:
+        image_id = image_id or "image"
         for i, (mask, score) in enumerate(zip(masks, scores)):
             mask_img = (mask.astype(np.uint8) * 255)
-            _save_debug_image(debug_dir, f"03_sam_mask_{i:02d}.png", mask_img)
-            _save_debug_image(
+            _save_debug_step(debug_dir, image_id, 3, i * 3 + 1, f"sam_mask_{i:02d}", mask_img)
+            _save_debug_step(
                 debug_dir,
-                f"03_sam_mask_{i:02d}_overlay.jpg",
+                image_id,
+                3,
+                i * 3 + 2,
+                f"sam_mask_{i:02d}_overlay",
                 _overlay_mask(bgr, mask_img),
                 as_bgr=True,
+                ext=".jpg",
             )
-            with open(os.path.join(debug_dir, f"03_sam_score_{i:02d}.txt"), "w", encoding="utf-8") as score_file:
+            score_path = os.path.join(debug_dir, _debug_filename(image_id, 3, i * 3 + 3, f"sam_score_{i:02d}", ".txt"))
+            with open(score_path, "w", encoding="utf-8") as score_file:
                 score_file.write(f"{score:.6f}\n")
         if prompt_coords is not None:
-            _save_debug_image(
+            _save_debug_step(
                 debug_dir,
-                "03_prompt_overlay.jpg",
+                image_id,
+                3,
+                50,
+                "prompt_overlay",
                 _overlay_prompt_points(bgr, prompt_coords),
                 as_bgr=True,
+                ext=".jpg",
             )
 
     best = masks[int(np.argmax(scores))].astype(np.uint8) * 255
@@ -249,7 +288,12 @@ def _detect_plate_sam(
     return np.asarray(cv2.morphologyEx(best, cv2.MORPH_CLOSE, kernel), dtype=np.uint8)
 
 
-def _normalize_plate(bgr: np.ndarray, plate_mask: np.ndarray, debug_dir: str | None = None) -> np.ndarray:
+def _normalize_plate(
+    bgr: np.ndarray,
+    plate_mask: np.ndarray,
+    debug_dir: str | None = None,
+    image_id: str | None = None,
+) -> np.ndarray:
     """
     Stage 2: within the plate mask, classify pixels by HSV + local texture.
 
@@ -273,9 +317,37 @@ def _normalize_plate(bgr: np.ndarray, plate_mask: np.ndarray, debug_dir: str | N
     plate_surface = (
         inside & (s < _PLATE_SAT_MAX) & (v > _PLATE_VAL_MIN) & (texture_std < _PLATE_TEX_MAX)
     )
+    plate_condition = (s < _PLATE_SAT_MAX) & (v > _PLATE_VAL_MIN) & (texture_std < _PLATE_TEX_MAX)
 
     if debug_dir is not None:
-        _save_debug_image(debug_dir, "05_plate_surface.png", plate_surface.astype(np.uint8) * 255)
+        image_id = image_id or "image"
+        _save_debug_step(debug_dir, image_id, 4, 1, "hsv_s", s)
+        _save_debug_step(debug_dir, image_id, 4, 2, "hsv_v", v)
+        _save_debug_step(debug_dir, image_id, 4, 3, "gray", gray)
+        _save_debug_step(debug_dir, image_id, 4, 4, "texture_std", texture_std)
+        _save_debug_step(debug_dir, image_id, 4, 5, "inside_mask", inside.astype(np.uint8) * 255)
+        _save_debug_step(debug_dir, image_id, 4, 6, "plate_condition", plate_condition.astype(np.uint8) * 255)
+        _save_debug_step(debug_dir, image_id, 4, 7, "plate_surface_mask", plate_surface.astype(np.uint8) * 255)
+        _save_debug_step(
+            debug_dir,
+            image_id,
+            4,
+            8,
+            "plate_surface_overlay",
+            _overlay_mask(bgr, plate_surface.astype(np.uint8) * 255),
+            as_bgr=True,
+            ext=".jpg",
+        )
+        _save_debug_step(
+            debug_dir,
+            image_id,
+            4,
+            9,
+            "inside_overlay",
+            _overlay_mask(bgr, inside.astype(np.uint8) * 255),
+            as_bgr=True,
+            ext=".jpg",
+        )
 
     result = np.zeros_like(bgr)
     result[inside] = bgr[inside]

@@ -15,6 +15,9 @@ results/*.png
 results/*.jpg
 results/*.txt
 
+# Debug outputs
+debug/
+
 # uv
 .venv/
 uv.lock

@@ -12,6 +12,8 @@ checkpoints/*.pt
 results/*.csv
 results/*.json
 results/*.png
+results/*.jpg
+results/*.txt
 
 # uv
 .venv/

@@ -22,8 +22,10 @@ from tqdm import tqdm
 from utils import save_ndarray_image
 
 _OUT_SIZE = 800
-_CLOSE_KERNEL = 20  # morphological closing after SAM mask to fill small gaps
-_PLATE_SAT_MAX = 40
+_MASK_CLOSE_KERNEL = 21  # morphological closing after SAM mask to fill small gaps
+_MASK_ERODE_KERNEL = 21  # morphological erosion to trim plate border from SAM mask
+_NOISE_REMOVAL_KERNEL = 21  # morphological opening to remove small plate-surface dots inside food region
+_PLATE_SAT_MAX = 25
 _PLATE_VAL_MIN = 150
 _PLATE_TEX_MAX = 12
 
@@ -68,6 +70,35 @@ def _overlay_mask(image: np.ndarray, mask: np.ndarray, alpha: float = 0.35) -> n
     return overlay
 
 
+def _remove_plate_noise(plate_surface: np.ndarray, kernel_size: int = _NOISE_REMOVAL_KERNEL) -> np.ndarray:
+    """Remove tiny plate-surface dots inside the food region using morphology."""
+    mask = (plate_surface.astype(np.uint8) * 255) if plate_surface.dtype == bool else plate_surface.astype(np.uint8)
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size, kernel_size))
+    cleaned = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+    return (cleaned > 0)
+
+
+def _erode_plate_mask(mask: np.ndarray, kernel_size: int = _MASK_ERODE_KERNEL) -> np.ndarray:
+    """Erode the plate mask to trim the outer border."""
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size, kernel_size))
+    return cv2.erode(mask, kernel, iterations=1)
+
+
+def _close_mask_border(mask: np.ndarray, kernel_size: int = _MASK_CLOSE_KERNEL) -> np.ndarray:
+    """Close the plate mask using black padding to avoid edge morphing artifacts."""
+    if kernel_size % 2 == 0:
+        kernel_size += 1
+    pad = kernel_size // 2
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size, kernel_size))
+    padded = cv2.copyMakeBorder(mask, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=0)
+    closed = cv2.morphologyEx(padded, cv2.MORPH_CLOSE, kernel)
+    return closed[pad:-pad, pad:-pad] if pad > 0 else closed
+
+
 def _get_sam_predictor() -> SamPredictor:
     """Lazy-load SAM ViT-B predictor, downloading the checkpoint on first use (~375 MB)."""
     global _sam_predictor
@@ -102,28 +133,28 @@ def segment_image(
         output_path: If provided, saves the result to this path.
         debug_dir: If provided, writes intermediate debug images and masks here.
     """
-    bgr = cv2.imread(input_path)
-    if bgr is None:
+    image_bgr = cv2.imread(input_path)
+    if image_bgr is None:
         raise FileNotFoundError(f"Cannot read image: {input_path}")
 
     if debug_dir is not None:
         os.makedirs(debug_dir, exist_ok=True)
 
     image_id = Path(input_path).stem
-    h0, w0 = bgr.shape[:2]
-    bgr_sq, pad_top, pad_left = _pad_to_square(bgr)
+    h0, w0 = image_bgr.shape[:2]
+    padded_bgr, pad_top, pad_left = _pad_to_square(image_bgr)
     if debug_dir is not None:
-        _save_debug_step(debug_dir, image_id, 1, 0, "padded", bgr_sq, as_bgr=True)
+        _save_debug_step(debug_dir, image_id, 1, 0, "padded", padded_bgr, as_bgr=True)
 
     side = max(h0, w0)
-    bgr_800 = cv2.resize(bgr_sq, (_OUT_SIZE, _OUT_SIZE), interpolation=cv2.INTER_LINEAR)
+    resized_bgr = cv2.resize(padded_bgr, (_OUT_SIZE, _OUT_SIZE), interpolation=cv2.INTER_LINEAR)
     if debug_dir is not None:
-        _save_debug_step(debug_dir, image_id, 2, 0, "resized", bgr_800, as_bgr=True)
+        _save_debug_step(debug_dir, image_id, 2, 0, "resized", resized_bgr, as_bgr=True)
 
     scale = _OUT_SIZE / float(side)
-    prompt_coords = _build_sam_prompt_coords(w0, h0, pad_left, pad_top, scale)
-    plate_mask = _detect_plate_sam(
-        bgr_800,
+    prompt_coords = _build_sam_prompt_points(w0, h0, pad_left, pad_top, scale)
+    plate_mask = _detect_plate_mask(
+        resized_bgr,
         prompt_coords=prompt_coords,
         debug_dir=debug_dir,
         image_id=image_id,
@@ -136,12 +167,12 @@ def segment_image(
             3,
             6,
             "plate_mask_overlay",
-            _overlay_mask(bgr_800, plate_mask),
+            _overlay_mask(resized_bgr, plate_mask),
             as_bgr=True,
             ext=".jpg",
         )
 
-    result_bgr = _normalize_plate(bgr_800, plate_mask, debug_dir=debug_dir, image_id=image_id)
+    result_bgr = _normalize_plate(resized_bgr, plate_mask, debug_dir=debug_dir, image_id=image_id)
 
     if debug_dir is not None:
         _save_debug_step(debug_dir, image_id, 5, 0, "result", result_bgr, as_bgr=True, ext=".jpg")
@@ -170,8 +201,8 @@ def _pad_to_square(bgr: np.ndarray) -> tuple[np.ndarray, int, int]:
     return canvas, top, left
 
 
-def _build_sam_prompt_coords(w0: int, h0: int, pad_left: int, pad_top: int, scale: float) -> np.ndarray:
-    """Build SAM prompt coordinates in padded+resized image space."""
+def _build_sam_prompt_points(w0: int, h0: int, pad_left: int, pad_top: int, scale: float) -> np.ndarray:
+    """Build SAM prompt coordinates in padded + resized image space."""
     def map_point(x: float, y: float) -> tuple[float, float]:
         px = (pad_left + x) * scale
         py = (pad_top + y) * scale
@@ -194,7 +225,7 @@ def _build_sam_prompt_coords(w0: int, h0: int, pad_left: int, pad_top: int, scal
     return np.array(points, dtype=np.float32)
 
 
-def _overlay_prompt_points(image: np.ndarray, prompt_coords: np.ndarray, radius: int = 10) -> np.ndarray:
+def _draw_prompt_points(image: np.ndarray, prompt_coords: np.ndarray, radius: int = 10) -> np.ndarray:
     overlay = image.copy()
     for idx, (x, y) in enumerate(prompt_coords.tolist()):
         point = (int(round(x)), int(round(y)))
@@ -213,7 +244,7 @@ def _overlay_prompt_points(image: np.ndarray, prompt_coords: np.ndarray, radius:
     return overlay
 
 
-def _detect_plate_sam(
+def _detect_plate_mask(
     bgr: np.ndarray,
     prompt_coords: np.ndarray | None = None,
     debug_dir: str | None = None,
@@ -278,14 +309,18 @@ def _detect_plate_sam(
                 3,
                 50,
                 "prompt_overlay",
-                _overlay_prompt_points(bgr, prompt_coords),
+                _draw_prompt_points(bgr, prompt_coords),
                 as_bgr=True,
                 ext=".jpg",
             )
 
     best = masks[int(np.argmax(scores))].astype(np.uint8) * 255
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (_CLOSE_KERNEL, _CLOSE_KERNEL))
-    return np.asarray(cv2.morphologyEx(best, cv2.MORPH_CLOSE, kernel), dtype=np.uint8)
+    closed = _close_mask_border(best)
+    shrunk = _erode_plate_mask(closed)
+    if debug_dir is not None and image_id is not None:
+        _save_debug_step(debug_dir, image_id, 3, 55, "plate_mask_closed", closed)
+        _save_debug_step(debug_dir, image_id, 3, 56, "plate_mask_shrunk", shrunk)
+    return np.asarray(shrunk, dtype=np.uint8)
 
 
 def _normalize_plate(
@@ -319,6 +354,10 @@ def _normalize_plate(
     )
     plate_condition = (s < _PLATE_SAT_MAX) & (v > _PLATE_VAL_MIN) & (texture_std < _PLATE_TEX_MAX)
 
+    plate_surface_clean = _remove_plate_noise(plate_surface)
+    small_plate_dots = plate_surface & ~plate_surface_clean
+    plate_surface = plate_surface_clean
+
     if debug_dir is not None:
         image_id = image_id or "image"
         _save_debug_step(debug_dir, image_id, 4, 1, "hsv_s", s)
@@ -327,27 +366,9 @@ def _normalize_plate(
         _save_debug_step(debug_dir, image_id, 4, 4, "texture_std", texture_std)
         _save_debug_step(debug_dir, image_id, 4, 5, "inside_mask", inside.astype(np.uint8) * 255)
         _save_debug_step(debug_dir, image_id, 4, 6, "plate_condition", plate_condition.astype(np.uint8) * 255)
-        _save_debug_step(debug_dir, image_id, 4, 7, "plate_surface_mask", plate_surface.astype(np.uint8) * 255)
-        _save_debug_step(
-            debug_dir,
-            image_id,
-            4,
-            8,
-            "plate_surface_overlay",
-            _overlay_mask(bgr, plate_surface.astype(np.uint8) * 255),
-            as_bgr=True,
-            ext=".jpg",
-        )
-        _save_debug_step(
-            debug_dir,
-            image_id,
-            4,
-            9,
-            "inside_overlay",
-            _overlay_mask(bgr, inside.astype(np.uint8) * 255),
-            as_bgr=True,
-            ext=".jpg",
-        )
+        _save_debug_step(debug_dir, image_id, 4, 7, "plate_surface_mask_before", (plate_surface | small_plate_dots).astype(np.uint8) * 255)
+        _save_debug_step(debug_dir, image_id, 4, 8, "plate_surface_mask_after", plate_surface.astype(np.uint8) * 255)
+        _save_debug_step(debug_dir, image_id, 4, 9, "plate_surface_small_dot_overlay", _overlay_mask(bgr, small_plate_dots.astype(np.uint8) * 255), as_bgr=True, ext=".jpg")
 
     result = np.zeros_like(bgr)
     result[inside] = bgr[inside]

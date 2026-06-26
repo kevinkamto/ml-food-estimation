@@ -31,7 +31,7 @@ _OUT_SIZE = 800
 _MASK_CLOSE_KERNEL = 21  # morphological closing after SAM mask to fill small gaps
 _MASK_ERODE_KERNEL = 21  # morphological erosion to trim plate border from SAM mask
 _NOISE_REMOVAL_KERNEL = 21  # morphological opening to remove small plate-surface dots inside food region
-_PLATE_SAT_MAX = 25
+_PLATE_SAT_MAX = 15
 _PLATE_VAL_MIN = 150
 _PLATE_TEX_MAX = 12
 

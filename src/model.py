@@ -39,7 +39,6 @@ class DualStreamEfficientNet(nn.Module):
 
         self.regression_head = nn.Sequential(
             nn.Linear(512, 1),
-            nn.Sigmoid(),
         )
 
     def forward(
@@ -53,7 +52,7 @@ class DualStreamEfficientNet(nn.Module):
             area_ratio = area_ratio.unsqueeze(1)
 
         fused = self.fusion(torch.cat([feat_before, feat_after, diff, area_ratio], dim=1))
-        out: torch.Tensor = self.regression_head(fused).squeeze(1)
+        out: torch.Tensor = self.regression_head(fused).squeeze(1).clamp(0.0, 1.0)
         return out
 
     def freeze_backbone(self) -> None:

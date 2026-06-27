@@ -52,9 +52,9 @@ Single-task dual-stream EfficientNet-B0 with enhanced fusion:
 - **Stream 2**: Segmented after image -> EfficientNet-B0 (shared weights) -> feat_after (1280,)
 - **Fusion**: concat([feat_before, feat_after, |feat_before - feat_after|, area_ratio]) -> (3841,)
 - **area_ratio**: scalar = non-black pixels in after_seg / non-black pixels in before_seg
-- **Regression head**: FC(3841->1024->512->1) + Sigmoid -> consumption ratio r in [0,1]
+- **Regression head**: FC(3841->1024->512->1) + clamp(0, 1) -> consumption ratio r in [0,1]
 - **No classification head** (single-task design)
-- **Loss**: HuberLoss(delta=0.1)
+- **Loss**: L1Loss (MAE)
 - **Optimizer**: Adam, lr=0.0001
 - **Input**: Segmented images only (NOT raw images), background already removed
 
@@ -64,10 +64,12 @@ Single-task dual-stream EfficientNet-B0 with enhanced fusion:
 
 - **Framework**: PyTorch
 - **Environments**: Local machine (CPU or GPU) and Google Colab Pro (T4 GPU), code must run in both
-- **Cross-validation**: 5-fold GroupKFold grouped by food category (prevents leakage)
-- **Data split per fold**: train / val only (no separate test split)
+- **Cross-validation**: 10-fold GroupKFold grouped by food category (matches paper protocol, prevents leakage)
+- **Data split per fold**: 7/10 train, 2/10 val, 1/10 test (3-way; outer GroupKFold gives test, inner GroupKFold(n=5) gives val)
 - **Early stopping**: Stop after 20 consecutive epochs with no improvement
 - **Scheduler**: ReduceLROnPlateau(factor=0.5, patience=5) on val MAE
+- **Frozen warm-up**: Backbone frozen for first 10 epochs, then unfrozen (configurable via --frozen_epochs)
+- **Param groups**: Head and backbone in separate optimizer groups so backbone LR resets independently at unfreeze
 - **Sample weighting**: WeightedRandomSampler with inverse-frequency bin weights
 - **Checkpointing**: Save best-by-validation to `checkpoints/` relative to project root. On Colab, the project folder is mounted from Google Drive, so this path is already persisted on Drive.
 - **Random seeds**: Fix for Python, NumPy, PyTorch, and CUDA at start of every run
@@ -80,7 +82,7 @@ Single-task dual-stream EfficientNet-B0 with enhanced fusion:
 - Random padding
 - Random Gaussian blur
 - Random sharpness adjustment
-- Random contrast (probability 1/7 each)
+- Random contrast via ColorJitter(contrast=0.5) (probability 1/7 each)
 
 ### Normalization
 
@@ -138,7 +140,7 @@ uv sync
 pip install -r requirements.txt
 
 # Run training (set working directory to project root first)
-python src/train.py --folds 5 --epochs 100 --lr 0.0001 --batch_size 16
+python src/train.py --folds 10 --epochs 100 --lr 0.0001 --batch_size 16 --frozen_epochs 10
 
 # Segment a single raw image (produces 800x800: black background, white plate, food as-is)
 python src/segmentation.py --input data/raw/data_before/001/001_001_DSC_0059_bef.JPG --output results/seg_test.jpg

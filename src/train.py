@@ -21,15 +21,17 @@ def train_fold(
     model: DualStreamEfficientNet,
     train_loader: DataLoader,
     val_loader: DataLoader,
+    test_loader: DataLoader,
     optimizer: torch.optim.Optimizer,
     device: torch.device,
     epochs: int,
     patience: int,
+    frozen_epochs: int,
     fold_n: int,
     checkpoint_dir: str,
     norm_params: dict,
-) -> tuple[float, pd.DataFrame]:
-    criterion = nn.HuberLoss(delta=0.1)
+) -> tuple[float, float, pd.DataFrame]:
+    criterion = nn.L1Loss()
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
         optimizer, mode="min", factor=0.5, patience=5, min_lr=1e-6
     )
@@ -39,12 +41,10 @@ def train_fold(
     log_rows = []
 
     for epoch in range(1, epochs + 1):
-        if epoch == 6:
+        if epoch == frozen_epochs + 1:
             model.unfreeze_backbone()
-            # Reset LR so backbone fine-tuning starts at the full rate,
-            # not whatever the scheduler may have already reduced it to.
-            for pg in optimizer.param_groups:
-                pg["lr"] = optimizer.defaults["lr"]
+            # Reset only the backbone param group; head keeps its scheduler-tuned LR.
+            optimizer.param_groups[1]["lr"] = optimizer.defaults["lr"]
 
         # Train
         model.train()
@@ -133,16 +133,40 @@ def train_fold(
                 )
                 break
 
-    return best_val_mae, pd.DataFrame(log_rows)
+    # Evaluate on held-out test set using the best checkpoint
+    best_ckpt = torch.load(
+        os.path.join(checkpoint_dir, f"fold_{fold_n}_best.pth"),
+        map_location=device,
+        weights_only=False,
+    )
+    model.load_state_dict(best_ckpt["model_state_dict"])
+    model.eval()
+    test_preds: list[torch.Tensor] = []
+    test_targets: list[torch.Tensor] = []
+    with torch.no_grad():
+        for batch in test_loader:
+            before = batch["before"].to(device)
+            after = batch["after"].to(device)
+            area_ratio = batch["area_ratio"].to(device)
+            target = batch["consumption_ratio"].to(device)
+            pred = model(before, after, area_ratio)
+            test_preds.append(pred.cpu())
+            test_targets.append(target.cpu())
+
+    test_mae = compute_mae(torch.cat(test_preds), torch.cat(test_targets))
+    logger.info(f"Fold {fold_n} | Test MAE: {test_mae:.4f} (held-out)")
+
+    return best_val_mae, test_mae, pd.DataFrame(log_rows)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Train dual-stream food waste estimator")
-    parser.add_argument("--folds", type=int, default=5)
+    parser.add_argument("--folds", type=int, default=10)
     parser.add_argument("--epochs", type=int, default=100)
     parser.add_argument("--lr", type=float, default=0.0001)
     parser.add_argument("--batch_size", type=int, default=16)
     parser.add_argument("--patience", type=int, default=20)
+    parser.add_argument("--frozen_epochs", type=int, default=10)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--num_workers", type=int, default=2)
     args = parser.parse_args()
@@ -169,16 +193,21 @@ def main() -> None:
     train_transform = get_transforms("train")
     val_transform = get_transforms("val")
 
-    gkf = GroupKFold(n_splits=args.folds)
+    # Outer 10-fold: each fold yields a held-out test set (1/10) and trainval (9/10)
+    outer_gkf = GroupKFold(n_splits=args.folds)
+    # Inner 5-fold on trainval: first split gives val (20% of trainval ~ 2/10 total)
+    inner_gkf = GroupKFold(n_splits=5)
+
     groups = df["group"].values
     fold_indices: dict = {}
-    fold_maes: list[float] = []
+    fold_val_maes: list[float] = []
+    fold_test_maes: list[float] = []
     all_fold_logs: list[pd.DataFrame] = []
 
     pin_memory = device.type == "cuda"
 
-    for fold_n, (train_idx, val_idx) in enumerate(
-        gkf.split(np.arange(len(df)), groups=groups), start=1
+    for fold_n, (trainval_idx, test_idx) in enumerate(
+        outer_gkf.split(np.arange(len(df)), groups=groups), start=1
     ):
         logger.info(f"{'=' * 60}")
         logger.info(f"Fold {fold_n}/{args.folds}")
@@ -186,16 +215,29 @@ def main() -> None:
 
         set_seed(args.seed + fold_n)
 
-        fold_indices[f"fold_{fold_n}"] = {
-            "train": train_idx.tolist(),
-            "val": val_idx.tolist(),
-        }
+        trainval_df = df.iloc[trainval_idx]
+        test_df = df.iloc[test_idx]
+        tv_groups = trainval_df["group"].values
 
-        train_df = df.iloc[train_idx]
-        val_df = df.iloc[val_idx]
+        # Take only the first inner split to define val vs train
+        inner_train_local, val_local = next(
+            inner_gkf.split(np.arange(len(trainval_df)), groups=tv_groups)
+        )
+        train_df = trainval_df.iloc[inner_train_local]
+        val_df = trainval_df.iloc[val_local]
+
+        fold_indices[f"fold_{fold_n}"] = {
+            "train": train_df.index.tolist(),
+            "val": val_df.index.tolist(),
+            "test": test_df.index.tolist(),
+        }
+        logger.info(
+            f"Split sizes -- train: {len(train_df)}, val: {len(val_df)}, test: {len(test_df)}"
+        )
 
         train_ds = FoodWasteDataset(train_df, before_dir, after_dir, train_transform)
         val_ds = FoodWasteDataset(val_df, before_dir, after_dir, val_transform)
+        test_ds = FoodWasteDataset(test_df, before_dir, after_dir, val_transform)
 
         # Inverse-frequency sample weighting for imbalanced ratio distribution
         sample_weights = compute_class_weights(train_df)
@@ -217,48 +259,67 @@ def main() -> None:
             num_workers=args.num_workers,
             pin_memory=pin_memory,
         )
+        test_loader = DataLoader(
+            test_ds,
+            batch_size=args.batch_size,
+            shuffle=False,
+            num_workers=args.num_workers,
+            pin_memory=pin_memory,
+        )
 
         model = DualStreamEfficientNet(pretrained=True).to(device)
         model.freeze_backbone()
-        optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
 
-        best_mae, log_df = train_fold(
+        head_params = list(model.fusion.parameters()) + list(model.regression_head.parameters())
+        backbone_params = list(model.backbone.parameters())
+        optimizer = torch.optim.Adam(
+            [{"params": head_params}, {"params": backbone_params}],
+            lr=args.lr,
+        )
+
+        best_val_mae, test_mae, log_df = train_fold(
             model,
             train_loader,
             val_loader,
+            test_loader,
             optimizer,
             device,
             args.epochs,
             args.patience,
+            args.frozen_epochs,
             fold_n,
             checkpoint_dir,
             norm_params,
         )
-        fold_maes.append(best_mae)
+        fold_val_maes.append(best_val_mae)
+        fold_test_maes.append(test_mae)
         log_df["fold"] = fold_n
         all_fold_logs.append(log_df)
         log_df.to_csv(os.path.join(results_dir, f"fold_{fold_n}_log.csv"), index=False)
-        logger.info(f"Fold {fold_n} best val MAE: {best_mae:.4f}")
+        logger.info(f"Fold {fold_n} -- val MAE: {best_val_mae:.4f} | test MAE: {test_mae:.4f}")
 
     with open(os.path.join(results_dir, "fold_indices.json"), "w") as f:
         json.dump(fold_indices, f, indent=2)
 
-    # Save combined results CSV
     pd.concat(all_fold_logs, ignore_index=True).to_csv(
         os.path.join(results_dir, "all_folds_log.csv"), index=False
     )
 
     summary = {
-        "fold_maes": fold_maes,
-        "mean_mae": float(np.mean(fold_maes)),
-        "std_mae": float(np.std(fold_maes)),
+        "fold_val_maes": fold_val_maes,
+        "fold_test_maes": fold_test_maes,
+        "mean_val_mae": float(np.mean(fold_val_maes)),
+        "mean_test_mae": float(np.mean(fold_test_maes)),
+        "std_test_mae": float(np.std(fold_test_maes)),
         "human_baseline_mae": 0.0926,
-        "beats_baseline": float(np.mean(fold_maes)) < 0.0926,
+        "beats_baseline": float(np.mean(fold_test_maes)) < 0.0926,
     }
     with open(os.path.join(results_dir, "summary.json"), "w") as f:
         json.dump(summary, f, indent=2)
 
-    logger.info(f"Final Mean MAE: {summary['mean_mae']:.4f} +/- {summary['std_mae']:.4f}")
+    logger.info(
+        f"Final Mean Test MAE: {summary['mean_test_mae']:.4f} +/- {summary['std_test_mae']:.4f}"
+    )
     logger.info(f"Beats human baseline (0.0926): {summary['beats_baseline']}")
 
 

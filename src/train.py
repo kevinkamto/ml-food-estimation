@@ -298,6 +298,10 @@ def main() -> None:
         log_df.to_csv(os.path.join(results_dir, f"fold_{fold_n}_log.csv"), index=False)
         logger.info(f"Fold {fold_n} -- val MAE: {best_val_mae:.4f} | test MAE: {test_mae:.4f}")
 
+        # Partial save so results survive a mid-training crash
+        with open(os.path.join(results_dir, "summary.json"), "w") as f:
+            json.dump({"fold_val_maes": fold_val_maes, "fold_test_maes": fold_test_maes}, f, indent=2)
+
     with open(os.path.join(results_dir, "fold_indices.json"), "w") as f:
         json.dump(fold_indices, f, indent=2)
 

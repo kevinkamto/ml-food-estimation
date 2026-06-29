@@ -40,6 +40,7 @@ class DualStreamEfficientNet(nn.Module):
         self.regression_head = nn.Sequential(
             nn.Linear(512, 1),
         )
+        nn.init.constant_(self.regression_head[0].bias, 0.4)
 
     def forward(
         self, before: torch.Tensor, after: torch.Tensor, area_ratio: torch.Tensor

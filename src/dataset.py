@@ -88,12 +88,6 @@ def compute_class_weights(df: pd.DataFrame, n_bins: int = 10) -> torch.Tensor:
     return torch.tensor(weights, dtype=torch.float32)
 
 
-def _pixel_area(image_path: str) -> float:
-    """Count non-black pixels in a segmented image (black background)."""
-    arr = np.array(Image.open(image_path).convert("RGB"))
-    return float(np.any(arr > 0, axis=2).sum())
-
-
 def _seg_filename(raw_filename: str) -> str:
     # Segmented files are named {category}_{raw_filename}, e.g.
     # raw: 001_001_DSC_0059_bef.JPG -> segmented: 001_001_001_DSC_0059_bef.JPG
@@ -161,6 +155,15 @@ class FoodWasteDataset(Dataset):
         self.before_dir = before_dir
         self.after_dir = after_dir
         self.transform = transform
+        # Resolve paths once at init to avoid repeated os.walk on every __getitem__
+        self._before_paths = [
+            find_image(before_dir, _seg_filename(row["Image Before Eaten"]))
+            for _, row in self.df.iterrows()
+        ]
+        self._after_paths = [
+            find_image(after_dir, _seg_filename(row["Image After Eaten"]))
+            for _, row in self.df.iterrows()
+        ]
 
     def __len__(self) -> int:
         return len(self.df)
@@ -168,11 +171,8 @@ class FoodWasteDataset(Dataset):
     def __getitem__(self, idx: int) -> dict:
         row = self.df.iloc[idx]
 
-        before_seg = _seg_filename(row["Image Before Eaten"])
-        after_seg = _seg_filename(row["Image After Eaten"])
-
-        before_path = find_image(self.before_dir, before_seg)
-        after_path = find_image(self.after_dir, after_seg)
+        before_path = self._before_paths[idx]
+        after_path = self._after_paths[idx]
 
         before_img = Image.open(before_path).convert("RGB")
         after_img = Image.open(after_path).convert("RGB")

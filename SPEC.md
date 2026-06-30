@@ -137,7 +137,7 @@ After  image (3,224,224) -> EfficientNet-B0 -> feat_after  (1280,)
 ### 4.2 Weight Sharing
 
 - Both streams share the same EfficientNet-B0 backbone (Siamese-style)
-- Pretrained on ImageNet; backbone is frozen for the first 10 epochs (`--frozen_epochs`), then unfrozen with scheduler reset
+- Trains from random initialization by default (`--no-pretrained`). With `--pretrained` (ImageNet fine-tuning), the backbone is frozen for the first 10 epochs (`--frozen_epochs`), then unfrozen with scheduler reset; this frozen warm-up is skipped automatically when training from scratch
 
 ### 4.3 Loss Function
 
@@ -176,9 +176,10 @@ sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights))
 
 ```
 For each fold:
-    1. Initialize fresh model (EfficientNet-B0 pretrained)
-    2. Freeze backbone, train fusion + head for 10 epochs (--frozen_epochs)
-    3. Unfreeze all, train with Adam lr=0.0001
+    1. Initialize fresh model (EfficientNet-B0, random init by default; --pretrained for ImageNet init)
+    2. If --pretrained: freeze backbone, train fusion + head for 10 epochs (--frozen_epochs), then unfreeze
+       If training from scratch (default): no freeze, backbone trains from epoch 1
+    3. Train with Adam lr=0.0001
     4. ReduceLROnPlateau: factor=0.5, patience=5, min_lr=1e-6
     5. EarlyStopping: patience=20 epochs on val MAE
     6. Save best checkpoint: checkpoints/fold_{n}_best.pth
@@ -273,7 +274,7 @@ python src/segmentation.py --input_dir data/raw/data_before --output_dir data/se
 
 ## 7. Inference Pipeline (`src/inference.py` + `notebooks/LeFoodSet_Leftovers_Inference.ipynb`)
 
-### 6.1 Single Prediction
+### 7.1 Single Prediction
 
 ```python
 def predict(before_path, after_path, checkpoint_path, weight_before_g=None):
@@ -286,14 +287,14 @@ def predict(before_path, after_path, checkpoint_path, weight_before_g=None):
     return {'consumption_ratio': r_hat, ...}
 ```
 
-### 6.2 Ensemble Inference
+### 7.2 Ensemble Inference
 
-- Load all 5 fold checkpoints
+- Load all 10 fold checkpoints
 - Average r_hat across folds; report mean +/- std
 
 ---
 
-## 7. File Deliverables
+## 8. File Deliverables
 
 | File                                             | Description                            | Status         |
 | ------------------------------------------------ | -------------------------------------- | -------------- |
@@ -314,7 +315,7 @@ def predict(before_path, after_path, checkpoint_path, weight_before_g=None):
 
 ---
 
-## 8. Evaluation Criteria
+## 9. Evaluation Criteria
 
 | Metric              | Target   | Baseline               |
 | ------------------- | -------- | ---------------------- |
@@ -323,7 +324,7 @@ def predict(before_path, after_path, checkpoint_path, weight_before_g=None):
 
 ---
 
-## 9. Out of Scope
+## 10. Out of Scope
 
 - Training a separate segmentation model (segmented images already provided)
 - Food category classification (single-task design)
@@ -334,7 +335,7 @@ def predict(before_path, after_path, checkpoint_path, weight_before_g=None):
 
 ---
 
-## 10. End-to-End Verification
+## 11. End-to-End Verification
 
 The system is working correctly when:
 

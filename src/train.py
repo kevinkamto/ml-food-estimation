@@ -180,6 +180,12 @@ def main() -> None:
     parser.add_argument("--batch_size", type=int, default=16)
     parser.add_argument("--patience", type=int, default=20)
     parser.add_argument("--frozen_epochs", type=int, default=10)
+    parser.add_argument(
+        "--pretrained",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Use ImageNet-pretrained EfficientNet-B0 backbone, or random init (default).",
+    )
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--num_workers", type=int, default=2)
     args = parser.parse_args()
@@ -282,8 +288,16 @@ def main() -> None:
             pin_memory=pin_memory,
         )
 
-        model = DualStreamEfficientNet(pretrained=True).to(device)
-        model.freeze_backbone()
+        model = DualStreamEfficientNet(pretrained=args.pretrained).to(device)
+        effective_frozen_epochs = args.frozen_epochs
+        if args.pretrained:
+            model.freeze_backbone()
+        else:
+            effective_frozen_epochs = 0
+            logger.info(
+                "Training from scratch (--no-pretrained): skipping frozen warm-up, "
+                "backbone trains from epoch 1 (frozen_epochs forced to 0)."
+            )
 
         head_params = list(model.fusion.parameters()) + list(model.regression_head.parameters())
         backbone_params = list(model.backbone.parameters())
@@ -301,7 +315,7 @@ def main() -> None:
             device,
             args.epochs,
             args.patience,
-            args.frozen_epochs,
+            effective_frozen_epochs,
             fold_n,
             checkpoint_dir,
             norm_params,

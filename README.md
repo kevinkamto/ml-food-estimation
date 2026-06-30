@@ -40,7 +40,7 @@ After  image (3,224,224) -> EfficientNet-B0 -> feat_after  (1280,)
                     consumption_ratio r  in [0, 1]
 ```
 
-Both streams share EfficientNet-B0 weights (Siamese-style). Backbone is pretrained on ImageNet, frozen for the first 10 epochs, then fully unfrozen (LR reset to initial value on unfreeze).
+Both streams share EfficientNet-B0 weights (Siamese-style). Backbone trains from random initialization by default (`--no-pretrained`); pass `--pretrained` to fine-tune from ImageNet weights instead, in which case the backbone is frozen for the first 10 epochs then fully unfrozen (LR reset to initial value on unfreeze). The frozen warm-up is skipped automatically when training from scratch.
 
 **area_ratio**: non-black pixel count of after image / before image -- gives the model an explicit visual coverage signal.
 
@@ -73,6 +73,7 @@ ml-food-waste-estimation/
 │   ├── model.py                    # DualStreamEfficientNet (single-task)
 │   ├── train.py                    # 10-fold outer + 5-fold inner GroupKFold training loop
 │   ├── inference.py                # CLI inference script
+│   ├── segmentation.py             # Raw image -> segmented image (SAM-based)
 │   └── utils.py                    # Metrics, seed fixing
 ├── checkpoints/                    # Best model per fold
 └── results/                        # Metrics, logs, training curves
@@ -129,9 +130,25 @@ After that, all relative paths (`data/`, `checkpoints/`, `results/`, `src/`) res
 
 ---
 
+## Segmentation
+
+Raw photos must be converted to the segmented format (black background, white plate, food at original colors) before training or inference. Ground-truth segmented images are already provided under `data/segmented/`; this step is only needed for new raw images.
+
+```bash
+# Single image
+uv run python src/segmentation.py --input data/raw/data_before/001/001_001_DSC_0059_bef.JPG --output results/seg_test.jpg
+
+# Batch (walks subdirectories, writes flat into output_dir)
+uv run python src/segmentation.py --input_dir data/raw/data_before --output_dir data/segmented/data_before
+```
+
+Uses SAM (Segment Anything, ViT-B) with point prompts to detect the plate, then classifies pixels inside the mask as plate surface (white) or food (original color) using HSV + local texture. See `SPEC.md` section 6 for the full algorithm and known limitations.
+
+---
+
 ## Training
 
-Local (uv):
+Local (uv), trains from scratch by default:
 ```bash
 uv run python src/train.py --folds 10 --epochs 100 --lr 0.0001 --batch_size 16
 ```
@@ -141,12 +158,18 @@ Colab:
 python src/train.py --folds 10 --epochs 100 --lr 0.0001 --batch_size 16
 ```
 
+Fine-tune from ImageNet-pretrained weights instead:
+```bash
+uv run python src/train.py --folds 10 --epochs 100 --lr 0.0001 --batch_size 16 --pretrained --frozen_epochs 10
+```
+
 Training details:
 - 10-fold outer GroupKFold (gives 10% test split) + 5-fold inner (gives ~20% val), grouped by food category
 - WeightedRandomSampler with inverse-frequency bin weights (bimodal distribution)
-- ReduceLROnPlateau(factor=0.5, patience=5); scheduler and LR reset when backbone unfreezes at epoch 11
+- ReduceLROnPlateau(factor=0.5, patience=5); with `--pretrained`, scheduler and LR reset when backbone unfreezes at epoch `frozen_epochs + 1`
 - Early stopping: patience=20 epochs on val MAE
 - Random seeds fixed at 42 for Python, NumPy, PyTorch, and CUDA
+- Training from scratch (default) on only 524 samples is more overfitting-prone than fine-tuning; budget more epochs and watch validation MAE closely
 
 Checkpoints are saved to `checkpoints/fold_{n}_best.pth` relative to the project root.
 

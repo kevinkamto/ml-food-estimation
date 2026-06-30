@@ -26,6 +26,8 @@ ml-food-waste-estimation/
 │   ├── dataset.py                  # PyTorch Dataset class
 │   ├── model.py                    # Dual-stream EfficientNet-B0 model
 │   ├── train.py                    # Training loop and k-fold CV
+│   ├── inference.py                # CLI inference script (single checkpoint or raw image)
+│   ├── segmentation.py             # Raw image -> segmented image (SAM-based)
 │   └── utils.py                    # Helpers: metrics, transforms, logging
 ├── checkpoints/                    # Saved model weights per fold
 └── results/                        # Logs, metrics, plots
@@ -69,6 +71,7 @@ Single-task dual-stream EfficientNet-B0 with enhanced fusion:
 - **Early stopping**: Stop after 20 consecutive epochs with no improvement
 - **Scheduler**: ReduceLROnPlateau(factor=0.5, patience=5) on val MAE
 - **Frozen warm-up**: Backbone frozen for first 10 epochs, then unfrozen (configurable via --frozen_epochs)
+- **Pretrained vs. from-scratch**: Backbone defaults to random initialization, training from scratch (--no-pretrained, default). Pass --pretrained to fine-tune from ImageNet weights instead. When training from scratch the frozen warm-up is automatically skipped (forced to 0 frozen epochs) since there is no pretrained feature extractor to protect. Note: with only 524 samples, training the backbone fully from scratch is far more prone to overfitting than fine-tuning pretrained weights, consider more epochs and watch validation MAE closely
 - **Param groups**: Head and backbone in separate optimizer groups so backbone LR resets independently at unfreeze
 - **Sample weighting**: WeightedRandomSampler with inverse-frequency bin weights
 - **Checkpointing**: Save best-by-validation to `checkpoints/` relative to project root. On Colab, the project folder is mounted from Google Drive, so this path is already persisted on Drive.
@@ -139,8 +142,11 @@ uv sync
 # Install dependencies (Google Colab -- uses pip)
 pip install -r requirements.txt
 
-# Run training (set working directory to project root first)
-python src/train.py --folds 10 --epochs 100 --lr 0.0001 --batch_size 16 --frozen_epochs 10
+# Run training (set working directory to project root first; trains from scratch by default)
+python src/train.py --folds 10 --epochs 100 --lr 0.0001 --batch_size 16
+
+# Fine-tune from ImageNet-pretrained weights instead of training from scratch
+python src/train.py --folds 10 --epochs 100 --lr 0.0001 --batch_size 16 --pretrained --frozen_epochs 10
 
 # Segment a single raw image (produces 800x800: black background, white plate, food as-is)
 python src/segmentation.py --input data/raw/data_before/001/001_001_DSC_0059_bef.JPG --output results/seg_test.jpg

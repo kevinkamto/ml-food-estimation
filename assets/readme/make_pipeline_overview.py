@@ -11,10 +11,10 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[2]
 OUT_PATH = Path(__file__).parent / "pipeline_overview.png"
 
-BEFORE_RAW = ROOT / "data/raw/data_before/010/010_185_DSC_0370_bef.JPG"
-AFTER_RAW = ROOT / "data/raw/data_after/010/010_185_DSC_0423_aft.JPG"
-BEFORE_SEG = ROOT / "data/segmented/data_before/010_010_185_DSC_0370_bef.JPG"
-AFTER_SEG = ROOT / "data/segmented/data_after/010_010_185_DSC_0423_aft.JPG"
+BEFORE_RAW = ROOT / "data/raw/data_before/001/001_031_DSC_0343_bef.JPG"
+AFTER_RAW = ROOT / "data/raw/data_after/001/001_031_DSC_0393_aft.JPG"
+BEFORE_SEG = ROOT / "data/segmented/data_before/001_001_031_DSC_0343_bef.JPG"
+AFTER_SEG = ROOT / "data/segmented/data_after/001_001_031_DSC_0393_aft.JPG"
 
 fig = plt.figure(figsize=(13, 4.2))
 gs = fig.add_gridspec(2, 6, width_ratios=[1.1, 0.55, 1.1, 0.7, 1.3, 1.0],
@@ -79,7 +79,7 @@ ax_out.add_patch(FancyArrowPatch((-0.15, 0.5), (0.1, 0.5),
 out_box = FancyBboxPatch((0.12, 0.2), 0.85, 0.6, boxstyle="round,pad=0.03,rounding_size=0.06",
                           linewidth=1.2, edgecolor="#1F1F1F", facecolor="#1F1F1F", alpha=0.92)
 ax_out.add_patch(out_box)
-ax_out.text(0.545, 0.56, "r = 0.42", ha="center", va="center",
+ax_out.text(0.545, 0.56, "r = 0.98", ha="center", va="center",
             fontsize=11, color="white", fontweight="bold")
 ax_out.text(0.545, 0.34, "consumption ratio", ha="center", va="center",
             fontsize=7.5, color="#DDDDDD")

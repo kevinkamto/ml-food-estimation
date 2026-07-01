@@ -9,10 +9,10 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[2]
 
 PAIRS = [
-    ("Raw -- Before", ROOT / "data/raw/data_before/010/010_185_DSC_0370_bef.JPG"),
-    ("Segmented -- Before", ROOT / "data/segmented/data_before/010_010_185_DSC_0370_bef.JPG"),
-    ("Raw -- After", ROOT / "data/raw/data_after/010/010_185_DSC_0423_aft.JPG"),
-    ("Segmented -- After", ROOT / "data/segmented/data_after/010_010_185_DSC_0423_aft.JPG"),
+    ("Raw -- Before", ROOT / "data/raw/data_before/001/001_031_DSC_0343_bef.JPG"),
+    ("Segmented -- Before", ROOT / "data/segmented/data_before/001_001_031_DSC_0343_bef.JPG"),
+    ("Raw -- After", ROOT / "data/raw/data_after/001/001_031_DSC_0393_aft.JPG"),
+    ("Segmented -- After", ROOT / "data/segmented/data_after/001_001_031_DSC_0393_aft.JPG"),
 ]
 
 fig, axes = plt.subplots(2, 2, figsize=(9, 7))
